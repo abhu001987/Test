@@ -538,11 +538,18 @@
     font-family:'Fraunces',serif; font-size:13px; font-weight:600; line-height:1.3;
     color: var(--deep-blue); margin-bottom:6px;
   }
-  .fact-box .aq-options{ display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+    .fact-box .aq-options{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:7px;
+    margin-top:6px;
+  }
   .fact-box .aq-opt{
     position:relative;
+    text-align:center;
+    width:100%;
     font-size:9.5px; font-weight:600; font-family:'IBM Plex Mono',monospace;
-    padding:4px 9px; border-radius:20px;
+    padding:4px 6px; border-radius:20px;
     background: var(--pc-opt-bg); border:1px solid var(--border-light);
     color: var(--deep-blue);
     transition: border-color .15s, background .15s, transform .12s;
