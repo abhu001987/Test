@@ -3358,9 +3358,12 @@ function submitMockAnswer() {
     const cleanAnswer = ans.toLowerCase().trim();
     q.keywords.forEach(kw => {
       total += kw.weight;
+      // FIX: guard against keywords that don't have a synonyms array —
+      // fall back to matching the word itself instead of throwing.
+      const synonymList = (kw.synonyms && kw.synonyms.length > 0) ? kw.synonyms : [kw.word];
       let found = false;
-      for (let syn of kw.synonyms) {
-        if (cleanAnswer.includes(syn.toLowerCase())) {
+      for (let syn of synonymList) {
+        if (cleanAnswer.includes(String(syn).toLowerCase())) {
           found = true;
           score += kw.weight;
           matched.push(kw.word);
