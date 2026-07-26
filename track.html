@@ -200,15 +200,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   flex-shrink: 0;
-  /* background, border, border-radius removed — no box */
 }
 
 .logo .mark svg {
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   display: block;
 }
 
@@ -938,6 +937,12 @@
     50%{box-shadow:0 0 30px rgba(74,158,122,.4), 0 0 50px var(--gold-glow);}
   }
   .vs-card.fx-winner{animation:winnerGlow 1s ease 3;}
+
+  @media (max-width: 600px) {
+  .logo { font-size: 22px; gap: 9px; }
+  .logo .mark { width: 46px; height: 46px; }
+  .logo .mark svg { width: 46px; height: 46px; }
+}
 </style>
 </head>
 <body>
@@ -948,30 +953,30 @@
     <div class="nav-inner">
       <a href="index.html" class="logo">
   <span class="mark">
-    <svg viewBox="0 0 60 60" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <defs>
-        <linearGradient id="pandaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#EF4444"/>
-          <stop offset="20%" stop-color="#F59E0B"/>
-          <stop offset="40%" stop-color="#EAB308"/>
-          <stop offset="60%" stop-color="#22C55E"/>
-          <stop offset="80%" stop-color="#3B82F6"/>
-          <stop offset="100%" stop-color="#8B5CF6"/>
-        </linearGradient>
-      </defs>
-      <circle cx="30" cy="28" r="22" stroke="url(#pandaGradient)"/>
-      <circle cx="12" cy="10" r="7" stroke="url(#pandaGradient)"/>
-      <circle cx="48" cy="10" r="7" stroke="url(#pandaGradient)"/>
-      <circle cx="22" cy="25" r="4.5" stroke="url(#pandaGradient)"/>
-      <circle cx="22" cy="25" r="1.5" fill="url(#pandaGradient)" fill-opacity="0.7"/>
-      <circle cx="38" cy="25" r="4.5" stroke="url(#pandaGradient)"/>
-      <circle cx="38" cy="25" r="1.5" fill="url(#pandaGradient)" fill-opacity="0.7"/>
-      <path d="M27 33 L30 37 L33 33" stroke="url(#pandaGradient)"/>
-      <path d="M26 38 Q30 43 34 38" stroke="url(#pandaGradient)"/>
-      <path d="M14 32 L16 35" stroke="url(#pandaGradient)" stroke-dasharray="2 2" opacity="0.5"/>
-      <path d="M46 32 L44 35" stroke="url(#pandaGradient)" stroke-dasharray="2 2" opacity="0.5"/>
-    </svg>
-  </span>
+  <svg viewBox="0 0 60 60" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <defs>
+      <linearGradient id="pandaGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#EF4444"/>
+        <stop offset="25%" stop-color="#F59E0B"/>
+        <stop offset="45%" stop-color="#22C55E"/>
+        <stop offset="65%" stop-color="#0EA5E9"/>
+        <stop offset="85%" stop-color="#3B82F6"/>
+        <stop offset="100%" stop-color="#8B5CF6"/>
+      </linearGradient>
+    </defs>
+    <circle cx="30" cy="28" r="22" stroke="url(#pandaGradient)"/>
+    <circle cx="12" cy="10" r="7" stroke="url(#pandaGradient)"/>
+    <circle cx="48" cy="10" r="7" stroke="url(#pandaGradient)"/>
+    <circle cx="22" cy="25" r="4.5" stroke="url(#pandaGradient)"/>
+    <circle cx="22" cy="25" r="1.5" fill="url(#pandaGradient)" fill-opacity="0.7"/>
+    <circle cx="38" cy="25" r="4.5" stroke="url(#pandaGradient)"/>
+    <circle cx="38" cy="25" r="1.5" fill="url(#pandaGradient)" fill-opacity="0.7"/>
+    <path d="M27 33 L30 37 L33 33" stroke="url(#pandaGradient)"/>
+    <path d="M26 38 Q30 43 34 38" stroke="url(#pandaGradient)"/>
+    <path d="M14 32 L16 35" stroke="url(#pandaGradient)" stroke-dasharray="2 2" opacity="0.5"/>
+    <path d="M46 32 L44 35" stroke="url(#pandaGradient)" stroke-dasharray="2 2" opacity="0.5"/>
+  </svg>
+</span>
   <span class="logo-text">
     <span class="lm-m">M</span><span class="lm-a">a</span><span class="lm-p">p</span><span class="lm-i">i</span><span class="lm-t">s</span><span class="lm-o">to</span>
   </span>
