@@ -24,8 +24,8 @@
     --gold: #D4A853;
     --gold-bright: #EAC072;
     --gold-glow: rgba(212, 168, 83, 0.15);
-    --white-glass: rgba(255, 255, 255, 0.70);
-    --card-bg: rgba(255, 255, 255, 0.80);
+    --white-glass: rgba(255, 255, 255, 0.55);
+    --card-bg: rgba(255, 255, 255, 0.55);
     --border-light: rgba(11, 42, 60, 0.08);
     --navy: #0D1720;
     --navy-soft: #182B3A;
@@ -38,7 +38,8 @@
     --ink-text: #F1EADA;
     --muted-dark: #6B7981;
     --line: rgba(237,230,211,0.12);
-    --body-bg: #F4F8FC;
+    --body-bg: linear-gradient(135deg, #D6E4FF 0%, #E8D5FF 40%, #D5F5E3 100%);
+    --body-bg-2: #DCE4F0;
     --pc-opt-bg: rgba(255,255,255,0.68);
     --pc-result-bg: rgba(255,255,255,0.8);
     --danger: #F2545F;
@@ -70,10 +71,11 @@
     --gold: #E3B368;
     --gold-bright: #F7C177;
     --gold-glow: rgba(227, 179, 104, 0.16);
-    --white-glass: rgba(255, 255, 255, 0.05);
-    --card-bg: rgba(20, 34, 46, 0.65);
+    --white-glass: rgba(255, 255, 255, 0.045);
+    --card-bg: rgba(255, 255, 255, 0.045);
     --border-light: rgba(237, 230, 211, 0.10);
-    --body-bg: #0B161F;
+    --body-bg: #05060C;
+    --body-bg-2: #0A0D1B;
     --pc-opt-bg: rgba(255,255,255,0.06);
     --pc-result-bg: rgba(255,255,255,0.06);
     --panel-strong: rgba(30, 50, 65, 0.8);
@@ -81,7 +83,6 @@
     --blue-soft: rgba(91, 127, 255, 0.15);
     --violet-soft: rgba(139, 124, 246, 0.15);
   }
-
   [data-theme="dark"] .leaflet-baseTiles-pane { 
     filter: invert(1) hue-rotate(188deg) brightness(0.82) saturate(0.55) contrast(0.98); 
   }
