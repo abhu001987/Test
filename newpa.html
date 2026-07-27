@@ -171,42 +171,44 @@
     transition: background .35s ease, border-color .35s ease;
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 28px;
-    color: var(--deep-blue);
-    letter-spacing: 0.01em;
-    transition: color 0.3s ease;
-  }
-
-  .logo .mark {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-  }
-
-  .logo .mark svg {
-    width: 48px;
-    height: 48px;
-    display: block;
-  }
-
-  .logo-text {
+ .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.logo .mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+.logo .mark svg {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+.logo .brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.logo .brand-text .name {
   font-family: 'Fraunces', serif;
   font-weight: 600;
-  font-size:18px
+  font-size: 20px;
   letter-spacing: 0.01em;
   color: var(--deep-blue);
- }
-
+}
+.logo .brand-text .tag {
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
   .nav-links {
     display: flex;
     gap: 28px;
