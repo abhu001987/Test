@@ -83,7 +83,6 @@
     --blue-soft: rgba(91, 127, 255, 0.15);
     --violet-soft: rgba(139, 124, 246, 0.15);
   }
-
   [data-theme="dark"] .leaflet-baseTiles-pane { 
     filter: invert(1) hue-rotate(188deg) brightness(0.82) saturate(0.55) contrast(0.98); 
   }
@@ -488,6 +487,7 @@
     min-width:0; display:flex; flex-direction:column; align-items:center; gap:6px;
     animation: fadeUp .45s ease both;
     backdrop-filter: blur(4px);
+    cursor:pointer;
   }
   .coll-card:hover{ border-color: var(--gold); transform: translateY(-3px); }
   .coll-card .cname{ font-size:10.5px; font-weight:500; color:var(--deep-blue); overflow-wrap:break-word; }
@@ -874,6 +874,35 @@
   .topics-modal-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
   .tm-title{ font-family:'Fraunces',serif; font-weight:600; font-size:22px; color:var(--deep-blue); }
   .tm-sub{ font-size:12.5px; color:var(--muted); margin-top:4px; max-width:46ch; }
+
+  .tm-back{
+    display:inline-flex; align-items:center; gap:5px; cursor:pointer;
+    font-size:11.5px; font-weight:600; color:var(--muted);
+    margin-bottom:10px; width:fit-content;
+    transition: color .15s ease, transform .15s ease;
+  }
+  .tm-back svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; }
+  .tm-back:hover{ color: var(--gold); transform: translateX(-2px); }
+
+  .region-toggle{ margin-top:18px; display:flex; }
+  .region-track{
+    position:relative; display:inline-flex; background: var(--white-glass);
+    border:1px solid var(--border-light); border-radius:999px; padding:4px; gap:2px;
+  }
+  .region-thumb{
+    position:absolute; top:4px; left:4px; width:calc(50% - 4px); height:calc(100% - 8px);
+    background: linear-gradient(135deg, var(--deep-blue), var(--deep-blue-soft));
+    border-radius:999px; transition: transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:0;
+  }
+  .region-track.india .region-thumb{ transform: translateX(100%); }
+  .region-btn{
+    position:relative; z-index:1; border:none; background:none; padding:8px 22px; border-radius:999px;
+    font-size:12.5px; font-weight:600; color:var(--muted); transition: color .2s ease;
+    display:flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .region-btn.active{ color:#fff; }
+
   .topics-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-top:22px; }
   .topic-card{
     background: var(--white-glass);
@@ -2310,13 +2339,25 @@
   <div class="topics-modal">
     <div class="topics-modal-head">
       <div>
-        <div class="tm-title">All topics</div>
-        <div class="tm-sub">30+ categories mapped across rivers, ranges, climate systems, trade and more — tap one to start practicing.</div>
+        <div class="tm-back" id="topicsBackBtn">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back
+        </div>
+        <div class="tm-title" id="tmTitle">All topics</div>
+        <div class="tm-sub" id="tmSub">30+ categories mapped across rivers, ranges, climate systems, trade and more — tap one to start practicing.</div>
       </div>
       <button class="icon-badge" id="topicsCloseBtn" aria-label="Close">
         <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
+
+    <div class="region-toggle">
+      <div class="region-track" id="regionTrack">
+        <span class="region-thumb"></span>
+        <button class="region-btn active" data-region="world" id="regionWorldBtn">🌍 World</button>
+        <button class="region-btn" data-region="india" id="regionIndiaBtn">🇮🇳 India</button>
+      </div>
+    </div>
+
     <div class="topics-grid" id="topicsGrid"></div>
   </div>
 </div>
@@ -2364,7 +2405,7 @@
           <div class="rh-title">Your Results</div>
         </div>
       </div>
-      <button class="result-popup-close" onclick="closeResultPopup()" title="Close">
+      <button class="result-popup-close" onclick="closeMockResultPopup()" title="Close">
         <svg class="ic" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
@@ -2415,7 +2456,7 @@ const ICONS = {
 function ic(name){ return ICONS[name] || ICONS.map; }
 
 // ---------- DATA ----------
-const ALL_TOPICS = [
+const WORLD_TOPICS = [
   { name:"Rivers & Dams", icon:"river", count:124, keywords:"river dam water basin tributary" },
   { name:"Mountains", icon:"mountain", count:89, keywords:"mountain peak range highland summit" },
   { name:"National Parks", icon:"park", count:71, keywords:"park wildlife forest reserve sanctuary" },
@@ -2447,6 +2488,43 @@ const ALL_TOPICS = [
   { name:"Migration Routes", icon:"route", count:14, keywords:"migration route bird human corridor" },
   { name:"Renewable Energy", icon:"bolt", count:9, keywords:"energy solar wind hydro renewable" }
 ];
+
+const INDIA_TOPICS = [
+  { name:"Rivers & Dams", icon:"river", count:96, keywords:"ganga yamuna narmada godavari dam bhakra tehri" },
+  { name:"Mountains", icon:"mountain", count:52, keywords:"himalaya western ghats eastern ghats aravalli vindhya satpura" },
+  { name:"National Parks", icon:"park", count:64, keywords:"jim corbett kaziranga ranthambore bandipur gir sundarban tiger reserve" },
+  { name:"Ports", icon:"anchor", count:13, keywords:"kandla mumbai chennai kochi vizag paradip port" },
+  { name:"World Heritage", icon:"landmark", count:34, keywords:"taj mahal qutub minar hampi khajuraho unesco india" },
+  { name:"Trade Routes", icon:"route", count:11, keywords:"golden quadrilateral grand trunk road spice route" },
+  { name:"Seas & Gulfs", icon:"waves", count:9, keywords:"arabian sea bay of bengal gulf of khambhat gulf of mannar" },
+  { name:"Industries", icon:"factory", count:29, keywords:"jamshedpur steel textile mumbai jute bengal industry" },
+  { name:"Deserts", icon:"desert", count:6, keywords:"thar desert rajasthan arid" },
+  { name:"Glaciers", icon:"glacier", count:8, keywords:"siachen gangotri glacier himalaya" },
+  { name:"Volcanoes", icon:"volcano", count:3, keywords:"barren island volcano andaman" },
+  { name:"Plateaus", icon:"plateau", count:14, keywords:"deccan plateau chota nagpur malwa plateau" },
+  { name:"Lakes", icon:"lake", count:19, keywords:"wular chilika dal lake pulicat" },
+  { name:"Forests", icon:"park", count:22, keywords:"sundarbans forest western ghats mangrove india" },
+  { name:"Wind Patterns", icon:"wind", count:7, keywords:"monsoon wind loo western disturbance india" },
+  { name:"Ocean Currents", icon:"waves", count:6, keywords:"indian ocean current monsoon current" },
+  { name:"Climate Zones", icon:"climate", count:11, keywords:"tropical subtropical alpine climate india koppen" },
+  { name:"Minerals & Mining", icon:"mineral", count:24, keywords:"jharkhand odisha coal iron ore mineral india" },
+  { name:"Agriculture Belts", icon:"agriculture", count:27, keywords:"punjab wheat kerala spices green revolution belt" },
+  { name:"Population & Cities", icon:"population", count:38, keywords:"mumbai delhi bengaluru population density india" },
+  { name:"Time Zones", icon:"timezone", count:1, keywords:"ist indian standard time meridian" },
+  { name:"Tectonic Plates", icon:"layers", count:6, keywords:"indian plate earthquake himalaya fault" },
+  { name:"Coastlines", icon:"waves", count:12, keywords:"konkan coromandel malabar coast india" },
+  { name:"Islands", icon:"island", count:9, keywords:"andaman nicobar lakshadweep island" },
+  { name:"Canals & Straits", icon:"route", count:5, keywords:"palk strait ten degree channel canal india" },
+  { name:"Biosphere Reserves", icon:"biosphere", count:16, keywords:"nilgiri sundarban biosphere reserve india" },
+  { name:"Monsoon Systems", icon:"wind", count:8, keywords:"southwest monsoon northeast monsoon retreating india" },
+  { name:"Soil Types", icon:"agriculture", count:10, keywords:"alluvial black red laterite soil india" },
+  { name:"Migration Routes", icon:"route", count:7, keywords:"internal migration india rural urban corridor" },
+  { name:"Renewable Energy", icon:"bolt", count:13, keywords:"rajasthan solar park wind hydro india renewable" }
+];
+
+const REGION_TOPICS = { world: WORLD_TOPICS, india: INDIA_TOPICS };
+let currentRegion = 'world';
+
 const QUICKBAR = [
   { icon:"target", t:"Daily Challenge", s:"10 points" },
   { icon:"dice", t:"Random Place", s:"Test yourself" },
@@ -2456,13 +2534,16 @@ const QUICKBAR = [
 
 function renderCollections(){
   const grid = document.getElementById('collectionsGrid');
-  grid.innerHTML = ALL_TOPICS.slice(0,8).map((t,i)=>`
-    <div class="coll-card" style="animation-delay:${i*35}ms">
+  grid.innerHTML = WORLD_TOPICS.slice(0,8).map((t,i)=>`
+    <div class="coll-card" data-topic="${t.name}" style="animation-delay:${i*35}ms">
       <div class="icon-badge">${ic(t.icon)}</div>
       <div class="cname">${t.name}</div>
       <div class="ccount">${t.count}</div>
     </div>`).join('') + `<div class="coll-more" id="viewAllBtn">View all 30+ topics →</div>`;
-  document.getElementById('viewAllBtn').addEventListener('click', ()=>openTopicsModal());
+  document.getElementById('viewAllBtn').addEventListener('click', ()=>openTopicsModal(null,'world'));
+  grid.querySelectorAll('.coll-card').forEach(card=>{
+    card.addEventListener('click', ()=> openTopicsModal(card.dataset.topic, 'world'));
+  });
 }
 function renderQuickBar(){
   document.getElementById('quickBar').innerHTML = QUICKBAR.map(q=>`
@@ -2471,16 +2552,28 @@ function renderQuickBar(){
       <div><div class="qt">${q.t}</div><div class="qs">${q.s}</div></div>
     </div>`).join('');
 }
-function renderTopicsGrid(){
-  document.getElementById('topicsGrid').innerHTML = ALL_TOPICS.map((t,i)=>`
+function renderTopicsGrid(region){
+  const list = REGION_TOPICS[region] || WORLD_TOPICS;
+  document.getElementById('topicsGrid').innerHTML = list.map((t,i)=>`
     <div class="topic-card" data-topic="${t.name}" style="animation-delay:${i*22}ms">
       <div class="icon-badge">${ic(t.icon)}</div>
       <div class="cname">${t.name}</div>
       <div class="ccount">${t.count} items</div>
     </div>`).join('');
 }
-function openTopicsModal(highlightName){
-  document.getElementById('topicsOverlay').classList.add('open');
+function setRegion(region, highlightName){
+  currentRegion = region;
+  const track = document.getElementById('regionTrack');
+  const worldBtn = document.getElementById('regionWorldBtn');
+  const indiaBtn = document.getElementById('regionIndiaBtn');
+  track.classList.toggle('india', region === 'india');
+  worldBtn.classList.toggle('active', region === 'world');
+  indiaBtn.classList.toggle('active', region === 'india');
+  document.getElementById('tmTitle').textContent = region === 'india' ? 'All topics · India' : 'All topics · World';
+  document.getElementById('tmSub').textContent = region === 'india'
+    ? '30+ India-specific categories — rivers, mountains, parks and more mapped to the subcontinent.'
+    : '30+ categories mapped across rivers, ranges, climate systems, trade and more — tap one to start practicing.';
+  renderTopicsGrid(region);
   if(highlightName){
     setTimeout(()=>{
       const card = [...document.querySelectorAll('.topic-card')].find(c=>c.dataset.topic===highlightName);
@@ -2488,9 +2581,16 @@ function openTopicsModal(highlightName){
     },260);
   }
 }
+function openTopicsModal(highlightName, region){
+  document.getElementById('topicsOverlay').classList.add('open');
+  setRegion(region || 'world', highlightName);
+}
 function closeTopicsModal(){ document.getElementById('topicsOverlay').classList.remove('open'); }
 document.getElementById('topicsCloseBtn').addEventListener('click', closeTopicsModal);
+document.getElementById('topicsBackBtn').addEventListener('click', closeTopicsModal);
 document.getElementById('topicsOverlay').addEventListener('click', e=>{ if(e.target.id==='topicsOverlay') closeTopicsModal(); });
+document.getElementById('regionWorldBtn').addEventListener('click', ()=> setRegion('world'));
+document.getElementById('regionIndiaBtn').addEventListener('click', ()=> setRegion('india'));
 
 // ---------- LOCATIONS ----------
 const LOCATIONS = {
@@ -2638,7 +2738,9 @@ function searchAll(q){
     const d = LOCATIONS[k];
     return norm(`${d.name} ${d.region} ${d.topics.join(' ')} ${d.category}`).includes(q);
   }).slice(0,6);
-  const topics = ALL_TOPICS.filter(t=> norm(`${t.name} ${t.keywords}`).includes(q)).slice(0,6);
+  const worldMatches = WORLD_TOPICS.filter(t=> norm(`${t.name} ${t.keywords}`).includes(q)).map(t=>({...t, region:'world'}));
+  const indiaMatches = INDIA_TOPICS.filter(t=> norm(`${t.name} ${t.keywords}`).includes(q)).map(t=>({...t, region:'india'}));
+  const topics = [...worldMatches, ...indiaMatches].slice(0,6);
   return { locs, topics };
 }
 function renderDropdown(q){
@@ -2659,7 +2761,7 @@ function renderDropdown(q){
   }
   if(topics.length){
     html += `<div class="sd-group-label">Topics</div>`;
-    html += topics.map(t=>`<div class="sd-item" data-type="topic" data-name="${t.name}"><span class="sd-emoji" style="color:var(--gold)">${ic(t.icon)}</span><div><div class="sd-name">${t.name}</div><div class="sd-sub">${t.count} items</div></div></div>`).join('');
+    html += topics.map(t=>`<div class="sd-item" data-type="topic" data-name="${t.name}" data-region="${t.region}"><span class="sd-emoji" style="color:var(--gold)">${ic(t.icon)}</span><div><div class="sd-name">${t.name} <span style="opacity:.6;font-size:9.5px;">${t.region==='india'?'· India':'· World'}</span></div><div class="sd-sub">${t.count} items</div></div></div>`).join('');
   }
   dd.innerHTML = html;
   dd.classList.add('open');
@@ -2702,7 +2804,7 @@ searchDropdown.addEventListener('mousedown', e => {
     setActive(key);
     document.querySelector('.right-panel').scrollIntoView({ behavior:'smooth', block:'nearest' });
   } else {
-    openTopicsModal(item.dataset.name);
+    openTopicsModal(item.dataset.name, item.dataset.region || 'world');
   }
   searchInput.value = '';
   searchDropdown.classList.remove('open');
@@ -3118,7 +3220,6 @@ window.addEventListener('load', syncHeaderSpacer);
 syncHeaderSpacer();
 renderCollections();
 renderQuickBar();
-renderTopicsGrid();
 window.addEventListener('load', () => { map.invalidateSize(); });
 setTimeout(() => { map.invalidateSize(); }, 300);
 setActive('tajmahal');
@@ -3269,22 +3370,88 @@ setActive('tajmahal');
 })();
 
 // ============================================================
-// ========== MOCK TEST (Full 10-question assessment) ==========
+// ========== MOCK TEST - LOADS FROM JSON FILES ==========
 // ============================================================
 
-// Sample question bank (10 questions)
-const MOCK_QUESTIONS = [
-  { q: "What is the longest river in India?", model: "The longest river in India is the Ganga (Ganges), flowing over 2,500 km from the Himalayas to the Bay of Bengal.", keywords: [{word:"Ganga", weight:3, synonyms:["Ganges","Ganga","Ganges river"]},{word:"Himalayas", weight:2, synonyms:["Himalaya","Himalayan"]},{word:"Bay of Bengal", weight:2, synonyms:["Bay of Bengal","Bengal"]}] },
-  { q: "Which is the highest mountain peak in the world?", model: "Mount Everest, standing at 8,848.86 meters above sea level, is the highest mountain peak in the world.", keywords: [{word:"Everest", weight:4, synonyms:["Everest","Mt Everest","Mount Everest"]},{word:"8,848", weight:2, synonyms:["8848","8,848.86"]}] },
-  { q: "What is the capital of Australia?", model: "Canberra is the capital city of Australia, located in the Australian Capital Territory.", keywords: [{word:"Canberra", weight:5, synonyms:["Canberra"]}] },
-  { q: "Which desert is the largest in the world?", model: "The Sahara Desert is the largest hot desert in the world, covering most of North Africa.", keywords: [{word:"Sahara", weight:4, synonyms:["Sahara"]},{word:"Africa", weight:2, synonyms:["Africa","North Africa"]}] },
-  { q: "What is the deepest ocean in the world?", model: "The Pacific Ocean is the deepest, with the Mariana Trench reaching over 10,900 meters.", keywords: [{word:"Pacific", weight:3, synonyms:["Pacific"]},{word:"Mariana", weight:3, synonyms:["Mariana Trench","Mariana"]}] },
-  { q: "Which country has the largest population?", model: "India has the largest population in the world, surpassing China in 2023.", keywords: [{word:"India", weight:4, synonyms:["India"]},{word:"population", weight:2, synonyms:["population","people"]}] },
-  { q: "What is the longest river in the world?", model: "The Nile River is the longest river in the world, flowing over 6,650 km through Africa.", keywords: [{word:"Nile", weight:4, synonyms:["Nile"]},{word:"Africa", weight:2, synonyms:["Africa"]}] },
-  { q: "Which is the largest continent by area?", model: "Asia is the largest continent, covering approximately 44.58 million square kilometers.", keywords: [{word:"Asia", weight:4, synonyms:["Asia"]}] },
-  { q: "What is the driest continent on Earth?", model: "Antarctica is the driest continent, receiving less than 200mm of precipitation annually.", keywords: [{word:"Antarctica", weight:4, synonyms:["Antarctica"]},{word:"dry", weight:2, synonyms:["dry","driest"]}] },
-  { q: "Which river is known as the 'Lifeline of Egypt'?", model: "The Nile River is called the 'Lifeline of Egypt' because it provides water for agriculture and sustains civilization.", keywords: [{word:"Nile", weight:4, synonyms:["Nile"]},{word:"Egypt", weight:2, synonyms:["Egypt"]}] }
-];
+let MOCK_QUESTIONS = [];
+let MOCK_FEEDBACK = null;
+
+// Load questions from JSON file
+async function loadMockQuestions() {
+  try {
+    const response = await fetch('questions.json');
+    if (!response.ok) throw new Error('Failed to load questions.json');
+    const data = await response.json();
+    if (data && data.length > 0) {
+      MOCK_QUESTIONS = data;
+      console.log(`✅ Loaded ${MOCK_QUESTIONS.length} questions from questions.json`);
+      return true;
+    } else {
+      throw new Error('questions.json is empty');
+    }
+  } catch (err) {
+    console.error('Error loading questions:', err);
+    MOCK_QUESTIONS = getFallbackQuestions();
+    console.warn('⚠️ Using fallback questions');
+    return false;
+  }
+}
+
+// Load AI feedback from JSON file
+async function loadMockFeedback() {
+  try {
+    const response = await fetch('ai_feedback.json');
+    if (!response.ok) throw new Error('Failed to load ai_feedback.json');
+    MOCK_FEEDBACK = await response.json();
+    console.log('✅ Loaded AI feedback from ai_feedback.json');
+    return true;
+  } catch (err) {
+    console.error('Error loading AI feedback:', err);
+    MOCK_FEEDBACK = null;
+    return false;
+  }
+}
+
+// Fallback questions if JSON fails to load
+function getFallbackQuestions() {
+  return [
+    { q: "What is the longest river in India?", model: "The longest river in India is the Ganga (Ganges), flowing over 2,500 km from the Himalayas to the Bay of Bengal.", keywords: [{word:"Ganga", weight:3, synonyms:["Ganges","Ganga","Ganges river"]},{word:"Himalayas", weight:2, synonyms:["Himalaya","Himalayan"]},{word:"Bay of Bengal", weight:2, synonyms:["Bay of Bengal","Bengal"]}] },
+    { q: "Which is the highest mountain peak in the world?", model: "Mount Everest, standing at 8,848.86 meters above sea level, is the highest mountain peak in the world.", keywords: [{word:"Everest", weight:4, synonyms:["Everest","Mt Everest","Mount Everest"]},{word:"8,848", weight:2, synonyms:["8848","8,848.86"]}] },
+    { q: "What is the capital of Australia?", model: "Canberra is the capital city of Australia, located in the Australian Capital Territory.", keywords: [{word:"Canberra", weight:5, synonyms:["Canberra"]}] },
+    { q: "Which desert is the largest in the world?", model: "The Sahara Desert is the largest hot desert in the world, covering most of North Africa.", keywords: [{word:"Sahara", weight:4, synonyms:["Sahara"]},{word:"Africa", weight:2, synonyms:["Africa","North Africa"]}] },
+    { q: "What is the deepest ocean in the world?", model: "The Pacific Ocean is the deepest, with the Mariana Trench reaching over 10,900 meters.", keywords: [{word:"Pacific", weight:3, synonyms:["Pacific"]},{word:"Mariana", weight:3, synonyms:["Mariana Trench","Mariana"]}] },
+    { q: "Which country has the largest population?", model: "India has the largest population in the world, surpassing China in 2023.", keywords: [{word:"India", weight:4, synonyms:["India"]},{word:"population", weight:2, synonyms:["population","people"]}] },
+    { q: "What is the longest river in the world?", model: "The Nile River is the longest river in the world, flowing over 6,650 km through Africa.", keywords: [{word:"Nile", weight:4, synonyms:["Nile"]},{word:"Africa", weight:2, synonyms:["Africa"]}] },
+    { q: "Which is the largest continent by area?", model: "Asia is the largest continent, covering approximately 44.58 million square kilometers.", keywords: [{word:"Asia", weight:4, synonyms:["Asia"]}] },
+    { q: "What is the driest continent on Earth?", model: "Antarctica is the driest continent, receiving less than 200mm of precipitation annually.", keywords: [{word:"Antarctica", weight:4, synonyms:["Antarctica"]},{word:"dry", weight:2, synonyms:["dry","driest"]}] },
+    { q: "Which river is known as the 'Lifeline of Egypt'?", model: "The Nile River is called the 'Lifeline of Egypt' because it provides water for agriculture and sustains civilization.", keywords: [{word:"Nile", weight:4, synonyms:["Nile"]},{word:"Egypt", weight:2, synonyms:["Egypt"]}] }
+  ];
+}
+
+// Get AI feedback based on matched count
+function getMockAIFeedback(matchedCount) {
+  if (!MOCK_FEEDBACK || !MOCK_FEEDBACK.feedback) return null;
+  
+  let category;
+  if (matchedCount === 0) category = '0';
+  else if (matchedCount <= 5) category = '1-5';
+  else if (matchedCount <= 10) category = '5-10';
+  else if (matchedCount <= 20) category = '10-20';
+  else if (matchedCount <= 30) category = '20-30';
+  else if (matchedCount <= 40) category = '30-40';
+  else if (matchedCount <= 50) category = '40-50';
+  else if (matchedCount <= 60) category = '50-60';
+  else if (matchedCount <= 70) category = '60-70';
+  else if (matchedCount <= 80) category = '70-80';
+  else if (matchedCount <= 90) category = '80-90';
+  else category = '90-100';
+
+  const pool = MOCK_FEEDBACK.feedback[category];
+  if (!pool || pool.length === 0) return null;
+  
+  const randomIndex = Math.floor(Math.random() * pool.length);
+  return pool[randomIndex];
+}
 
 let mockState = {
   current: 0,
@@ -3325,6 +3492,19 @@ const mpAvg = document.getElementById('mpAvg');
 const mockXpPill = document.getElementById('mockXpPill');
 
 function startMockTest() {
+  if (MOCK_QUESTIONS.length === 0) {
+    alert('Questions not loaded yet. Please refresh the page.');
+    return;
+  }
+  
+  // Select 10 random questions
+  let shuffled = [...MOCK_QUESTIONS];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  MOCK_QUESTIONS = shuffled.slice(0, 10);
+  
   mockState = {
     current: 0,
     answers: [],
@@ -3342,6 +3522,7 @@ function startMockTest() {
     isListening: false,
     finalTranscript: ""
   };
+  
   mockStart.style.display = 'none';
   mockInterface.classList.remove('mock-hidden');
   mockRetryLink.style.display = 'none';
@@ -3396,9 +3577,12 @@ function submitMockAnswer() {
     const cleanAnswer = ans.toLowerCase().trim();
     q.keywords.forEach(kw => {
       total += kw.weight;
+      // FIX: guard against keywords that don't have a synonyms array —
+      // fall back to matching the word itself instead of throwing.
+      const synonymList = (kw.synonyms && kw.synonyms.length > 0) ? kw.synonyms : [kw.word];
       let found = false;
-      for (let syn of kw.synonyms) {
-        if (cleanAnswer.includes(syn.toLowerCase())) {
+      for (let syn of synonymList) {
+        if (cleanAnswer.includes(String(syn).toLowerCase())) {
           found = true;
           score += kw.weight;
           matched.push(kw.word);
@@ -3417,6 +3601,9 @@ function submitMockAnswer() {
   else mockState.missed++;
   mockState.times.push(timeSpent);
 
+  // Get AI feedback
+  const feedback = getMockAIFeedback(matched.length);
+
   mockState.answers.push({
     q: q.q,
     ans: ans,
@@ -3425,7 +3612,8 @@ function submitMockAnswer() {
     total: total,
     pct: pct,
     matched: matched,
-    missing: missing
+    missing: missing,
+    feedback: feedback
   });
 
   mockState.current++;
@@ -3452,13 +3640,13 @@ function finishMockTest() {
   clearInterval(mockState.timer);
   mockState.finished = true;
   mockInterface.classList.add('mock-hidden');
-  showAnalyzingOverlay();
+  showMockAnalyzing();
 }
 
-function showAnalyzingOverlay() {
+function showMockAnalyzing() {
   const overlay = document.getElementById('analyzingOverlay');
   const barFill = document.getElementById('analyzingBarFill');
-  if (!overlay) { showResultPopup(); return; }
+  if (!overlay) { showMockResultPopup(); return; }
   overlay.classList.add('active');
   requestAnimationFrame(() => {
     overlay.classList.add('show');
@@ -3468,12 +3656,12 @@ function showAnalyzingOverlay() {
     overlay.classList.remove('show');
     setTimeout(() => {
       overlay.classList.remove('active');
-      showResultPopup();
+      showMockResultPopup();
     }, 400);
   }, 4600);
 }
 
-function showResultPopup() {
+function showMockResultPopup() {
   const totalEarned = Math.round(mockState.totalScore * 10) / 10;
   const totalPossible = Math.round(mockState.maxScore * 10) / 10;
   const pct = totalPossible > 0 ? Math.round((totalEarned / totalPossible) * 100) : 0;
@@ -3559,17 +3747,22 @@ function showResultPopup() {
               <div class="rq-label">Model answer</div>
               <div class="rq-content">${a.model}</div>
             </div>
-            ${a.missing && a.missing.length > 0 ? `
+            ${a.feedback ? `
             <div class="rq-ai">
-              <div class="rq-ai-label">AI feedback</div>
+              <div class="rq-ai-label">🤖 AI feedback</div>
+              <div class="rq-ai-feedback">${a.feedback.feedback}</div>
+              <div class="rq-ai-suggestion">${a.feedback.suggestion}</div>
+            </div>` : (a.missing && a.missing.length > 0 ? `
+            <div class="rq-ai">
+              <div class="rq-ai-label">🤖 AI feedback</div>
               <div class="rq-ai-feedback">Missing concepts: ${a.missing.join(', ')}</div>
               <div class="rq-ai-suggestion">Focus on covering these key terms in your answers.</div>
             </div>` : `
             <div class="rq-ai">
-              <div class="rq-ai-label">AI feedback</div>
+              <div class="rq-ai-label">🤖 AI feedback</div>
               <div class="rq-ai-feedback">Great coverage! You hit all the key points.</div>
               <div class="rq-ai-suggestion">Keep up this level of detail in all answers.</div>
-            </div>`}
+            </div>`)}
           </div>
         </div>
       </div>`;
@@ -3579,7 +3772,7 @@ function showResultPopup() {
     </div>
     <div class="result-buttons">
       <button class="result-retry" onclick="retryMockTest()"><svg class="ic" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>Retry</button>
-      <button class="result-close-popup" onclick="closeResultPopup()"><svg class="ic" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Close</button>
+      <button class="result-close-popup" onclick="closeMockResultPopup()"><svg class="ic" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Close</button>
     </div>
   `;
 
@@ -3609,7 +3802,7 @@ function toggleRQ(el) {
   }
 }
 
-function closeResultPopup() {
+function closeMockResultPopup() {
   document.getElementById('resultPopup').classList.remove('active');
   document.body.style.overflow = '';
   // Show start state again
@@ -3619,7 +3812,7 @@ function closeResultPopup() {
 }
 
 function retryMockTest() {
-  closeResultPopup();
+  closeMockResultPopup();
   setTimeout(startMockTest, 300);
 }
 
@@ -3668,8 +3861,15 @@ mqAnswer.addEventListener('keydown', function(e) {
 
 // Close popup on Escape
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeResultPopup();
+  if (e.key === 'Escape') closeMockResultPopup();
 });
+
+// Initialize mock data
+(async function initMockData() {
+  await loadMockQuestions();
+  await loadMockFeedback();
+  console.log(`🚀 Mock test ready with ${MOCK_QUESTIONS.length} questions`);
+})();
 
 console.log('🚀 Terra Prep ready with Mock Test!');
 
