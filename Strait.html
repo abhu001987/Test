@@ -1818,22 +1818,21 @@ function renderBreakdown(myPts, theirPts){
   });
 }
 
-function renderBreakdown(myPts, theirPts){
+function renderSoloBreakdown(){
   const box = document.getElementById('breakdown-list');
   box.innerHTML = '';
-  order.forEach((strIdx, i)=>{
-    const mine = myPts[i], theirs = theirPts[i];
+  results.forEach((r,i)=>{
     const row = document.createElement('div');
     row.className = 'b-row';
     row.style.animationDelay = (i * 0.06) + 's';
-    row.innerHTML = `<span class="b-name">${STRAITS[strIdx].name}</span>
-      <span class="b-marks">
-        <span class="b-mk ${theirs > mine ? 'ok' : 'no'}" title="Rival">${theirs}</span>
-        <span class="b-mk ${mine >= theirs ? 'ok' : 'no'}" title="You">${mine}</span>
-      </span>`;
+    row.innerHTML = `<span class="b-idx">${i+1}</span>
+      <span class="b-name">${r.name}</span>
+      <span class="b-dist">${r.km} km</span>
+      <span class="b-pts ${r.cls}">+${r.pts}</span>`;
     box.appendChild(row);
   });
 }
+
 /* ---------------- Challenge link build / share ---------------- */
 function randomCode(){
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
