@@ -1,94 +1,43 @@
-// theme.js - Complete shared theme management for all pages
+/* ============================================================
+   TERRA PREP — SHARED THEME SCRIPT
+   Load this in <head>, NOT deferred/async, so theme applies
+   before paint — no flash of the wrong theme on any page.
+   ============================================================ */
 
-(function() {
-    // ===== CONFIG =====
-    const STORAGE_KEY = 'theme';  // ← FIXED: Changed from 'shoruto-theme' to 'theme'
-    const DEFAULT_THEME = 'dark';
+(function () {
+  var STORAGE_KEY = 'terra-site-theme';
+  var root = document.documentElement;
 
-    // ===== GET STORED THEME =====
-    function getStoredTheme() {
-        // Check both old and new keys for backward compatibility
-        const oldTheme = localStorage.getItem('shoruto-theme');
-        const newTheme = localStorage.getItem(STORAGE_KEY);
-        if (oldTheme && !newTheme) {
-            // Migrate old theme to new key
-            localStorage.setItem(STORAGE_KEY, oldTheme);
-            localStorage.removeItem('shoruto-theme');
-            return oldTheme;
-        }
-        return newTheme || DEFAULT_THEME;
+  // Apply saved theme immediately
+  var stored = localStorage.getItem(STORAGE_KEY);
+  root.setAttribute('data-theme', stored === 'dark' ? 'dark' : 'light');
+
+  // Sync across tabs if toggled elsewhere
+  window.addEventListener('storage', function (e) {
+    if (e.key === STORAGE_KEY) {
+      root.setAttribute('data-theme', e.newValue === 'dark' ? 'dark' : 'light');
     }
+  });
 
-    // ===== APPLY THEME TO HTML =====
-    function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        updatePandaColors(theme);
-        updateParticleColors(theme);
-    }
+  // Wire up a toggle button if the page has one
+  function initToggle() {
+    var btn = document.getElementById('themeToggleBtn');
+    if (!btn) return;
+    btn.setAttribute('aria-label', root.getAttribute('data-theme') === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
 
-    // ===== UPDATE PANDA LOGO COLORS =====
-    function updatePandaColors(theme) {
-        const pandaLogo = document.getElementById('pandaLogo');
-        if (!pandaLogo) return;
-        const svg = pandaLogo.querySelector('svg');
-        if (!svg) return;
-        const color = theme === 'dark' ? '#DCEEFF' : '#0b1a33';
-        svg.querySelectorAll('circle, path').forEach(el => {
-            if (el.getAttribute('stroke')) {
-                el.setAttribute('stroke', color);
-            }
-            if (el.getAttribute('fill') && el.getAttribute('fill') !== 'none') {
-                el.setAttribute('fill', color);
-            }
-        });
-    }
-
-    // ===== UPDATE PARTICLE COLORS (for homepage) =====
-    function updateParticleColors(theme) {
-        const canvas = document.getElementById('particleCanvas');
-        if (!canvas) return;
-        // Trigger particle redraw if available
-        if (window._particleTick) {
-            window._particleTick(theme);
-        }
-        if (window.redrawParticles) {
-            window.redrawParticles(theme);
-        }
-    }
-
-    // ===== TOGGLE THEME =====
-    function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || DEFAULT_THEME;
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        localStorage.setItem(STORAGE_KEY, newTheme);
-        applyTheme(newTheme);
-        return newTheme;
-    }
-
-    // ===== EXPOSE TO GLOBAL SCOPE =====
-    window.toggleTheme = toggleTheme;
-    window.getStoredTheme = getStoredTheme;
-    window.applyTheme = applyTheme;
-    window.updateParticleColors = updateParticleColors;
-
-    // ===== INITIALIZE =====
-    const initialTheme = getStoredTheme();
-    applyTheme(initialTheme);
-
-    // ===== LISTEN FOR CHANGES FROM OTHER TABS =====
-    window.addEventListener('storage', function(e) {
-        if (e.key === STORAGE_KEY) {
-            const newTheme = e.newValue || DEFAULT_THEME;
-            applyTheme(newTheme);
-        }
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem(STORAGE_KEY, next);
+      btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      // Lets a page redraw canvases/maps on theme change if it needs to
+      window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
     });
+  }
 
-    // ===== APPLY ON DOM READY =====
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            applyTheme(getStoredTheme());
-        });
-    }
-
-    console.log('🎨 Theme system initialized. Current theme:', getStoredTheme());
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initToggle);
+  } else {
+    initToggle();
+  }
 })();
