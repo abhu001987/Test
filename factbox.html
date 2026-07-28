@@ -2057,6 +2057,15 @@
   .fact-strip-inner{ flex-wrap:wrap; }
   .fs-next{ order:3; width:100%; justify-content:center; }
 }
+.mock-head-right{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.mock-close-btn{
+  border:none; cursor:pointer;
+  background: var(--danger-dim);
+  border:1px solid rgba(242,84,95,0.4) !important;
+  color: var(--danger) !important;
+  transition: transform .15s, background .15s;
+}
+.mock-close-btn:hover{ background: rgba(242,84,95,0.22); transform: translateY(-1px); }
 </style>
 </head>
 <body>
@@ -2188,12 +2197,15 @@
   <!-- ===== MOCK TEST CARD ===== -->
   <div class="pc-card pc-mock" id="mockCard">
     <div class="pc-head">
-      <div class="pc-eyebrow">
-        <span class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" style="fill:currentColor"/></svg></span>
-        Mock Test
-      </div>
-      <span class="pc-xp-pill" id="mockXpPill">+10 XP per Q</span>
-    </div>
+  <div class="pc-eyebrow">
+    <span class="icon-badge">...</span>
+    Mock Test
+  </div>
+  <div class="mock-head-right">
+    <span class="pc-xp-pill" id="mockXpPill">+10 XP per Q</span>
+    <button class="pc-xp-pill mock-close-btn mock-hidden" id="mockCloseBtn" title="Close test">Close</tton>
+  </div>
+</div>
     <div class="pc-sub">Test your knowledge with 10 UPSC-style questions</div>
 
     <!-- Start state -->
@@ -2523,69 +2535,69 @@ function ic(name){ return ICONS[name] || ICONS.map; }
 
 // ---------- DATA ----------
 const WORLD_TOPICS = [
-  { name:"Rivers & Dams", icon:"river", count:124, keywords:"river dam water basin tributary" },
-  { name:"Mountains", icon:"mountain", count:89, keywords:"mountain peak range highland summit" },
-  { name:"National Parks", icon:"park", count:71, keywords:"park wildlife forest reserve sanctuary" },
-  { name:"Ports", icon:"anchor", count:16, keywords:"port harbour trade shipping" },
-  { name:"World Heritage", icon:"landmark", count:41, keywords:"heritage unesco monument ancient" },
-  { name:"Trade Routes", icon:"route", count:18, keywords:"trade route silk road rail" },
-  { name:"Seas & Gulfs", icon:"waves", count:21, keywords:"sea gulf ocean bay strait" },
-  { name:"Industries", icon:"factory", count:37, keywords:"industry factory manufacturing mining" },
-  { name:"Deserts", icon:"desert", count:19, keywords:"desert dune arid sand" },
-  { name:"Glaciers", icon:"glacier", count:12, keywords:"glacier ice snow polar" },
-  { name:"Volcanoes", icon:"volcano", count:15, keywords:"volcano lava eruption magma ring of fire" },
-  { name:"Plateaus", icon:"plateau", count:22, keywords:"plateau tableland highland terrace" },
-  { name:"Lakes", icon:"lake", count:33, keywords:"lake lagoon wetland freshwater" },
-  { name:"Forests", icon:"park", count:28, keywords:"forest rainforest jungle woodland" },
-  { name:"Wind Patterns", icon:"wind", count:9, keywords:"wind trade winds monsoon jet stream" },
-  { name:"Ocean Currents", icon:"waves", count:11, keywords:"current ocean gulf stream circulation" },
-  { name:"Climate Zones", icon:"climate", count:14, keywords:"climate zone weather tropical temperate" },
-  { name:"Minerals & Mining", icon:"mineral", count:26, keywords:"mineral mining ore coal metal" },
-  { name:"Agriculture Belts", icon:"agriculture", count:31, keywords:"agriculture crop farming belt soil" },
-  { name:"Population & Cities", icon:"population", count:44, keywords:"population city urban density migration" },
-  { name:"Time Zones", icon:"timezone", count:8, keywords:"time zone meridian longitude" },
-  { name:"Tectonic Plates", icon:"layers", count:10, keywords:"tectonic plate earthquake fault boundary" },
-  { name:"Coastlines", icon:"waves", count:17, keywords:"coast coastline shoreline beach" },
-  { name:"Islands", icon:"island", count:20, keywords:"island archipelago atoll" },
-  { name:"Canals & Straits", icon:"route", count:13, keywords:"canal strait channel waterway" },
-  { name:"Biosphere Reserves", icon:"biosphere", count:18, keywords:"biosphere reserve ecology conservation" },
-  { name:"Monsoon Systems", icon:"wind", count:12, keywords:"monsoon rainfall season wind" },
-  { name:"Soil Types", icon:"agriculture", count:16, keywords:"soil alluvial laterite black soil" },
-  { name:"Migration Routes", icon:"route", count:14, keywords:"migration route bird human corridor" },
-  { name:"Renewable Energy", icon:"bolt", count:9, keywords:"energy solar wind hydro renewable" }
+  { name:"Rivers & Dams", icon:"river", count:124, keywords:"river dam water basin tributary", url:""/newtest" },
+  { name:"Mountains", icon:"mountain", count:89, keywords:"mountain peak range highland summit", url:""/newtest" },
+  { name:"National Parks", icon:"park", count:71, keywords:"park wildlife forest reserve sanctuary", url:"#" },
+  { name:"Ports", icon:"anchor", count:16, keywords:"port harbour trade shipping", url:"#" },
+  { name:"World Heritage", icon:"landmark", count:41, keywords:"heritage unesco monument ancient", url:"#" },
+  { name:"Trade Routes", icon:"route", count:18, keywords:"trade route silk road rail", url:"#" },
+  { name:"Seas & Gulfs", icon:"waves", count:21, keywords:"sea gulf ocean bay strait", url:"#" },
+  { name:"Industries", icon:"factory", count:37, keywords:"industry factory manufacturing mining", url:"#" },
+  { name:"Deserts", icon:"desert", count:19, keywords:"desert dune arid sand", url:""/newtest" },
+  { name:"Glaciers", icon:"glacier", count:12, keywords:"glacier ice snow polar", url:"#" },
+  { name:"Volcanoes", icon:"volcano", count:15, keywords:"volcano lava eruption magma ring of fire", url:"#" },
+  { name:"Plateaus", icon:"plateau", count:22, keywords:"plateau tableland highland terrace", url:"#" },
+  { name:"Lakes", icon:"lake", count:33, keywords:"lake lagoon wetland freshwater", url:"#" },
+  { name:"Forests", icon:"park", count:28, keywords:"forest rainforest jungle woodland", url:"#" },
+  { name:"Wind Patterns", icon:"wind", count:9, keywords:"wind trade winds monsoon jet stream", url:"#" },
+  { name:"Ocean Currents", icon:"waves", count:11, keywords:"current ocean gulf stream circulation", url:"#" },
+  { name:"Climate Zones", icon:"climate", count:14, keywords:"climate zone weather tropical temperate", url:"#" },
+  { name:"Minerals & Mining", icon:"mineral", count:26, keywords:"mineral mining ore coal metal", url:"#" },
+  { name:"Agriculture Belts", icon:"agriculture", count:31, keywords:"agriculture crop farming belt soil", url:"#" },
+  { name:"Population & Cities", icon:"population", count:44, keywords:"population city urban density migration", url:"#" },
+  { name:"Time Zones", icon:"timezone", count:8, keywords:"time zone meridian longitude", url:"#" },
+  { name:"Tectonic Plates", icon:"layers", count:10, keywords:"tectonic plate earthquake fault boundary", url:"#" },
+  { name:"Coastlines", icon:"waves", count:17, keywords:"coast coastline shoreline beach", url:"#" },
+  { name:"Islands", icon:"island", count:20, keywords:"island archipelago atoll", url:"#" },
+  { name:"Canals & Straits", icon:"route", count:13, keywords:"canal strait channel waterway", url:"#" },
+  { name:"Biosphere Reserves", icon:"biosphere", count:18, keywords:"biosphere reserve ecology conservation", url:"#" },
+  { name:"Monsoon Systems", icon:"wind", count:12, keywords:"monsoon rainfall season wind", url:"#" },
+  { name:"Soil Types", icon:"agriculture", count:16, keywords:"soil alluvial laterite black soil", url:"#" },
+  { name:"Migration Routes", icon:"route", count:14, keywords:"migration route bird human corridor", url:"#" },
+  { name:"Renewable Energy", icon:"bolt", count:9, keywords:"energy solar wind hydro renewable", url:"#" }
 ];
 
 const INDIA_TOPICS = [
-  { name:"Rivers & Dams", icon:"river", count:96, keywords:"ganga yamuna narmada godavari dam bhakra tehri" },
-  { name:"Mountains", icon:"mountain", count:52, keywords:"himalaya western ghats eastern ghats aravalli vindhya satpura" },
-  { name:"National Parks", icon:"park", count:64, keywords:"jim corbett kaziranga ranthambore bandipur gir sundarban tiger reserve" },
-  { name:"Ports", icon:"anchor", count:13, keywords:"kandla mumbai chennai kochi vizag paradip port" },
-  { name:"World Heritage", icon:"landmark", count:34, keywords:"taj mahal qutub minar hampi khajuraho unesco india" },
-  { name:"Trade Routes", icon:"route", count:11, keywords:"golden quadrilateral grand trunk road spice route" },
-  { name:"Seas & Gulfs", icon:"waves", count:9, keywords:"arabian sea bay of bengal gulf of khambhat gulf of mannar" },
-  { name:"Industries", icon:"factory", count:29, keywords:"jamshedpur steel textile mumbai jute bengal industry" },
-  { name:"Deserts", icon:"desert", count:6, keywords:"thar desert rajasthan arid" },
-  { name:"Glaciers", icon:"glacier", count:8, keywords:"siachen gangotri glacier himalaya" },
-  { name:"Volcanoes", icon:"volcano", count:3, keywords:"barren island volcano andaman" },
-  { name:"Plateaus", icon:"plateau", count:14, keywords:"deccan plateau chota nagpur malwa plateau" },
-  { name:"Lakes", icon:"lake", count:19, keywords:"wular chilika dal lake pulicat" },
-  { name:"Forests", icon:"park", count:22, keywords:"sundarbans forest western ghats mangrove india" },
-  { name:"Wind Patterns", icon:"wind", count:7, keywords:"monsoon wind loo western disturbance india" },
-  { name:"Ocean Currents", icon:"waves", count:6, keywords:"indian ocean current monsoon current" },
-  { name:"Climate Zones", icon:"climate", count:11, keywords:"tropical subtropical alpine climate india koppen" },
-  { name:"Minerals & Mining", icon:"mineral", count:24, keywords:"jharkhand odisha coal iron ore mineral india" },
-  { name:"Agriculture Belts", icon:"agriculture", count:27, keywords:"punjab wheat kerala spices green revolution belt" },
-  { name:"Population & Cities", icon:"population", count:38, keywords:"mumbai delhi bengaluru population density india" },
-  { name:"Time Zones", icon:"timezone", count:1, keywords:"ist indian standard time meridian" },
-  { name:"Tectonic Plates", icon:"layers", count:6, keywords:"indian plate earthquake himalaya fault" },
-  { name:"Coastlines", icon:"waves", count:12, keywords:"konkan coromandel malabar coast india" },
-  { name:"Islands", icon:"island", count:9, keywords:"andaman nicobar lakshadweep island" },
-  { name:"Canals & Straits", icon:"route", count:5, keywords:"palk strait ten degree channel canal india" },
-  { name:"Biosphere Reserves", icon:"biosphere", count:16, keywords:"nilgiri sundarban biosphere reserve india" },
-  { name:"Monsoon Systems", icon:"wind", count:8, keywords:"southwest monsoon northeast monsoon retreating india" },
-  { name:"Soil Types", icon:"agriculture", count:10, keywords:"alluvial black red laterite soil india" },
-  { name:"Migration Routes", icon:"route", count:7, keywords:"internal migration india rural urban corridor" },
-  { name:"Renewable Energy", icon:"bolt", count:13, keywords:"rajasthan solar park wind hydro india renewable" }
+  { name:"Rivers & Dams", icon:"river", count:96, keywords:"ganga yamuna narmada godavari dam bhakra tehri", url:"#" },
+  { name:"Mountains", icon:"mountain", count:52, keywords:"himalaya western ghats eastern ghats aravalli vindhya satpura", url:"#" },
+  { name:"National Parks", icon:"park", count:64, keywords:"jim corbett kaziranga ranthambore bandipur gir sundarban tiger reserve", url:"#" },
+  { name:"Ports", icon:"anchor", count:13, keywords:"kandla mumbai chennai kochi vizag paradip port", url:"#" },
+  { name:"World Heritage", icon:"landmark", count:34, keywords:"taj mahal qutub minar hampi khajuraho unesco india", url:"#" },
+  { name:"Trade Routes", icon:"route", count:11, keywords:"golden quadrilateral grand trunk road spice route", url:"#" },
+  { name:"Seas & Gulfs", icon:"waves", count:9, keywords:"arabian sea bay of bengal gulf of khambhat gulf of mannar", url:"#" },
+  { name:"Industries", icon:"factory", count:29, keywords:"jamshedpur steel textile mumbai jute bengal industry", url:"#" },
+  { name:"Deserts", icon:"desert", count:6, keywords:"thar desert rajasthan arid", url:"#" },
+  { name:"Glaciers", icon:"glacier", count:8, keywords:"siachen gangotri glacier himalaya", url:"#" },
+  { name:"Volcanoes", icon:"volcano", count:3, keywords:"barren island volcano andaman", url:"#" },
+  { name:"Plateaus", icon:"plateau", count:14, keywords:"deccan plateau chota nagpur malwa plateau", url:"#" },
+  { name:"Lakes", icon:"lake", count:19, keywords:"wular chilika dal lake pulicat", url:"#" },
+  { name:"Forests", icon:"park", count:22, keywords:"sundarbans forest western ghats mangrove india", url:"#" },
+  { name:"Wind Patterns", icon:"wind", count:7, keywords:"monsoon wind loo western disturbance india", url:"#" },
+  { name:"Ocean Currents", icon:"waves", count:6, keywords:"indian ocean current monsoon current", url:"#" },
+  { name:"Climate Zones", icon:"climate", count:11, keywords:"tropical subtropical alpine climate india koppen", url:"#" },
+  { name:"Minerals & Mining", icon:"mineral", count:24, keywords:"jharkhand odisha coal iron ore mineral india", url:"#" },
+  { name:"Agriculture Belts", icon:"agriculture", count:27, keywords:"punjab wheat kerala spices green revolution belt", url:"#" },
+  { name:"Population & Cities", icon:"population", count:38, keywords:"mumbai delhi bengaluru population density india", url:"#" },
+  { name:"Time Zones", icon:"timezone", count:1, keywords:"ist indian standard time meridian", url:"#" },
+  { name:"Tectonic Plates", icon:"layers", count:6, keywords:"indian plate earthquake himalaya fault", url:"#" },
+  { name:"Coastlines", icon:"waves", count:12, keywords:"konkan coromandel malabar coast india", url:"#" },
+  { name:"Islands", icon:"island", count:9, keywords:"andaman nicobar lakshadweep island", url:"#" },
+  { name:"Canals & Straits", icon:"route", count:5, keywords:"palk strait ten degree channel canal india", url:"#" },
+  { name:"Biosphere Reserves", icon:"biosphere", count:16, keywords:"nilgiri sundarban biosphere reserve india", url:"#" },
+  { name:"Monsoon Systems", icon:"wind", count:8, keywords:"southwest monsoon northeast monsoon retreating india", url:"#" },
+  { name:"Soil Types", icon:"agriculture", count:10, keywords:"alluvial black red laterite soil india", url:"#" },
+  { name:"Migration Routes", icon:"route", count:7, keywords:"internal migration india rural urban corridor", url:"#" },
+  { name:"Renewable Energy", icon:"bolt", count:13, keywords:"rajasthan solar park wind hydro india renewable", url:"#" }
 ];
 
 const REGION_TOPICS = { world: WORLD_TOPICS, india: INDIA_TOPICS };
@@ -2601,14 +2613,18 @@ const QUICKBAR = [
 function renderCollections(){
   const grid = document.getElementById('collectionsGrid');
   grid.innerHTML = WORLD_TOPICS.slice(0,8).map((t,i)=>`
-    <div class="coll-card" data-topic="${t.name}" style="animation-delay:${i*35}ms">
+    <div class="coll-card" data-topic="${t.name}" data-url="${t.url || '#'}" style="animation-delay:${i*35}ms">
       <div class="icon-badge">${ic(t.icon)}</div>
       <div class="cname">${t.name}</div>
       <div class="ccount">${t.count}</div>
     </div>`).join('') + `<div class="coll-more" id="viewAllBtn">View all 30+ topics →</div>`;
   document.getElementById('viewAllBtn').addEventListener('click', ()=>openTopicsModal(null,'world'));
   grid.querySelectorAll('.coll-card').forEach(card=>{
-    card.addEventListener('click', ()=> openTopicsModal(card.dataset.topic, 'world'));
+    card.addEventListener('click', ()=>{
+      const url = card.dataset.url;
+      if(url && url !== '#'){ window.location.href = url; }
+      else { openTopicsModal(card.dataset.topic, 'world'); }
+    });
   });
 }
 function renderQuickBar(){
@@ -2621,11 +2637,18 @@ function renderQuickBar(){
 function renderTopicsGrid(region){
   const list = REGION_TOPICS[region] || WORLD_TOPICS;
   document.getElementById('topicsGrid').innerHTML = list.map((t,i)=>`
-    <div class="topic-card" data-topic="${t.name}" style="animation-delay:${i*22}ms">
+    <div class="topic-card" data-topic="${t.name}" data-url="${t.url || '#'}" style="animation-delay:${i*22}ms">
       <div class="icon-badge">${ic(t.icon)}</div>
       <div class="cname">${t.name}</div>
       <div class="ccount">${t.count} items</div>
     </div>`).join('');
+
+  document.querySelectorAll('.topic-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const url = card.dataset.url;
+      if(url && url !== '#'){ window.location.href = url; }
+    });
+  });
 }
 function setRegion(region, highlightName){
   currentRegion = region;
@@ -3591,6 +3614,7 @@ function startMockTest() {
   
   mockStart.style.display = 'none';
   mockInterface.classList.remove('mock-hidden');
+  document.getElementById('mockCloseBtn').classList.remove('mock-hidden');
   mockRetryLink.style.display = 'none';
   loadMockQuestion(0);
 }
@@ -3608,7 +3632,16 @@ function loadMockQuestion(index) {
   updateMockProgress();
   startMockTimer();
 }
-
+function closeMockTest(){
+  clearInterval(mockState.timer);
+  if (mockState.recognition) {
+    mockState.recognition.stop();
+    mockState.isListening = false;
+  }
+  mockInterface.classList.add('mock-hidden');
+  mockStart.style.display = 'flex';
+  document.getElementById('mockCloseBtn').classList.add('mock-hidden');
+}
 function startMockTimer() {
   clearInterval(mockState.timer);
   mockState.timeLeft = 90;
@@ -3913,6 +3946,7 @@ function toggleMockVoice() {
 
 // Event bindings for mock test
 document.getElementById('startMockBtn').addEventListener('click', startMockTest);
+document.getElementById('mockCloseBtn').addEventListener('click', closeMockTest);
 mqVoiceBtn.addEventListener('click', toggleMockVoice);
 mqSubmitBtn.addEventListener('click', submitMockAnswer);
 
