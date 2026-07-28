@@ -1374,18 +1374,14 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!bg0) document.documentElement.classList.add('theme-css-missing');
 
   var themeToggle = document.getElementById('themeToggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', function() {
-      if (typeof toggleTheme === 'function') {
-        toggleTheme();
-      } else {
-        var html = document.documentElement;
-        var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        html.setAttribute('data-theme', next);
-        try { localStorage.setItem('theme', next); } catch (e) {}
-      }
-      setTimeout(function(){ try { map.invalidateSize(); } catch(e){} }, 320);
-    });
+if (themeToggle) {
+  themeToggle.addEventListener('click', function() {
+    var html = document.documentElement;
+    var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('terra-site-theme', next); } catch (e) {}
+    setTimeout(function(){ try { map.invalidateSize(); } catch(e){} }, 320);
+  });
   }
 });
 
