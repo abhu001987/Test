@@ -339,25 +339,33 @@
     }
 
     /* ============================================ */
-    /* PRIVACY PAGE — text fully left-aligned, no box, no center */
+    /* PRIVACY PAGE — full width, no side spacing, text left */
     .privacy-wrap {
       flex: 1;
-      max-width: 820px;
-      margin: 0 auto;
-      padding: calc(var(--nav-height, 92px) + 24px) clamp(20px, 3vw, 40px) 40px;
+      max-width: 100%;
+      margin: 0;
+      padding: calc(var(--nav-height, 92px) + 24px) 24px 40px;
       width: 100%;
       position: relative;
       z-index: 1;
     }
     @media (max-width: 768px) {
       .privacy-wrap {
-        padding: calc(var(--nav-height, 80px) + 28px) 18px 30px;
+        padding: calc(var(--nav-height, 80px) + 28px) 20px 30px;
       }
     }
-    /* no card, just plain text with left alignment */
+    @media (max-width: 480px) {
+      .privacy-wrap {
+        padding: calc(var(--nav-height, 80px) + 28px) 14px 24px;
+      }
+    }
+
     .privacy-content {
+      max-width: 820px;
+      margin: 0 auto;
       text-align: left;
     }
+
     .privacy-content .kicker {
       display: inline-flex;
       align-items: center;
@@ -561,7 +569,7 @@
   </div>
 </div>
 
-<!-- PRIVACY CONTENT — no box, full left alignment -->
+<!-- PRIVACY CONTENT — full width, no extra side spacing -->
 <main class="privacy-wrap">
   <div class="privacy-content">
     <div class="kicker">🔒 Privacy</div>
