@@ -296,6 +296,46 @@
   }
   .foot-note a:hover{ color: var(--gold-bright); }
 
+  /* ---------- Footer (from reference) ---------- */
+  .site-footer {
+    margin-top: 60px;
+    padding: 30px 0 20px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .site-footer a {
+    color: var(--muted);
+    transition: color 0.2s ease;
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    color: var(--gold);
+  }
+  .site-footer .footer-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .site-footer .copy {
+    font-size: 11px;
+    color: var(--muted-light);
+  }
+  @media (max-width: 480px) {
+    .site-footer {
+      flex-direction: column;
+      text-align: center;
+    }
+    .site-footer .footer-links {
+      justify-content: center;
+    }
+  }
+
   /* ---------- Entrance ---------- */
   @keyframes fadeUp{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:none; } }
   .hero .kicker{ animation: fadeUp .5s var(--ease) both .02s; }
@@ -485,6 +525,17 @@
     <div class="foot-note">Spotted a wrong fact, a broken map pin, or a joke that didn't land? <a href="contact.html">Tell us anyway</a> — we take feedback better than we take criticism about our chai addiction.</div>
   </section>
 
+  <!-- FOOTER (from reference) -->
+  <footer class="site-footer">
+    <span class="copy">© 2026 Mapisto · Terra Prep</span>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </footer>
+
 </div>
 
 <script>
@@ -500,11 +551,29 @@
   document.addEventListener('DOMContentLoaded', function(){
     var btn = document.getElementById('themeToggleBtn');
     if(!btn) return;
+    
+    // Sync theme icon state on load
+    function syncThemeIcons() {
+      var html = document.documentElement;
+      var theme = html.getAttribute('data-theme') || 'light';
+      var sunIcon = btn.querySelector('.theme-icon-sun');
+      var moonIcon = btn.querySelector('.theme-icon-moon');
+      if (theme === 'light') {
+        if (sunIcon) { sunIcon.style.opacity = '1'; sunIcon.style.transform = 'rotate(0) scale(1)'; }
+        if (moonIcon) { moonIcon.style.opacity = '0'; moonIcon.style.transform = 'rotate(90deg) scale(0.5)'; }
+      } else {
+        if (sunIcon) { sunIcon.style.opacity = '0'; sunIcon.style.transform = 'rotate(-90deg) scale(0.5)'; }
+        if (moonIcon) { moonIcon.style.opacity = '1'; moonIcon.style.transform = 'rotate(0) scale(1)'; }
+      }
+    }
+    syncThemeIcons();
+
     btn.addEventListener('click', function(){
       var html = document.documentElement;
       var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
       html.setAttribute('data-theme', next);
       try{ localStorage.setItem('terra-site-theme', next); }catch(e){}
+      syncThemeIcons();
     });
   });
 </script>
