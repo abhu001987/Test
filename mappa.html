@@ -936,7 +936,36 @@
   .footer-social{ display:flex; gap:10px; }
   .footer-social a{ width:30px; height:30px; border-radius:8px; border:1px solid var(--border-light); display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--muted); transition: all 0.15s ease; }
   .footer-social a:hover{ border-color:var(--gold); color:var(--gold); }
+  .footer-follow-list{ display:flex; flex-direction:column; gap:11px; }
+.footer-follow-list li a{
+  display:flex; align-items:center; gap:9px;
+  font-size:13px; color:var(--ink-soft); opacity:0.9;
+  transition: color .15s, opacity .15s;
+}
+.footer-follow-list li a:hover{ color:var(--gold); opacity:1; }
+.footer-follow-list li a svg{
+  width:16px; height:16px; flex-shrink:0;
+  stroke:currentColor; fill:none; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
 
+.newsletter-form{ display:flex; gap:0; border-radius:10px; overflow:hidden; border:1px solid var(--border-light); max-width:280px; }
+.newsletter-input{
+  flex:1; min-width:0; border:none; outline:none;
+  padding:10px 12px; font-size:12.5px; font-family:'Inter',sans-serif;
+  background: var(--white-glass); color:var(--ink);
+}
+.newsletter-input::placeholder{ color:var(--muted-light); }
+.newsletter-btn{
+  border:none; padding:10px 16px; font-size:12.5px; font-weight:600;
+  background: var(--deep-blue); color:#fff; white-space:nowrap;
+  transition: opacity .15s;
+}
+.newsletter-btn:hover{ opacity:0.85; }
+
+@media (max-width:480px){
+  .newsletter-form{ max-width:100%; }
+}
   /* ---------- Column stack ---------- */
   .col-stack{ display:flex; flex-direction:column; gap:20px; min-width:0; }
 
@@ -976,20 +1005,54 @@
   .pc-mock .pc-sub { margin-bottom: 12px; }
 
   .mock-test-start {
-    position: relative; z-index: 2;
+    position: relative; z-index: 2; overflow:hidden;
     margin: 6px 20px 14px;
-    padding: 28px 20px;
-    border-radius: 12px;
+    padding: 18px 20px;
+    border-radius: 14px;
     background: linear-gradient(135deg, var(--blue-soft), var(--violet-soft));
     border: 1px solid var(--border-light);
     text-align: center;
     transition: background .35s ease, border-color .35s ease;
-    min-height: 180px;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
+    box-shadow: 0 4px 20px rgba(0,20,40,0.04);
+}
+.mock-test-start::before{
+  content:'';
+  position:absolute; top:-60px; right:-60px;
+  width:180px; height:180px; border-radius:50%;
+  background: radial-gradient(circle, rgba(139,124,246,0.25), transparent 70%);
+  pointer-events:none;
+}
+.mock-test-start .mt-icon-badge{
+  width:56px; height:56px;
+  border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  background: var(--panel-strong);
+  border:1px solid rgba(91,127,255,0.3);
+  color: var(--blue);
+  margin-bottom:12px;
+  box-shadow: 0 8px 20px var(--blue-soft);
+}
+.mock-test-start .mt-icon-badge svg{
+  width:26px; height:26px; stroke:currentColor; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
+}
+
+.mt-stats-row{
+  display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+  margin: 4px 0 18px;
+}
+.mt-stat{
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:600; color: var(--muted);
+}
+.mt-stat svg{
+  width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  opacity:0.7;
+}
   .mock-test-start .mt-icon {
     font-size: 38px;
     margin-bottom: 10px;
@@ -1023,8 +1086,8 @@
     gap: 8px;
   }
   .mock-test-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px var(--blue-soft);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 28px var(--blue-soft);
   }
   .mock-test-btn svg {
     width: 16px;
@@ -1899,6 +1962,110 @@
     .pc-quiz .pc-submit-btn { padding: 10px !important; font-size: 12px !important; }
     .pc-quiz .pc-xp-pill { font-size: 10px !important; padding: 3px 10px !important; }
   }
+  /* ========== FACT STRIP (above footer) ========== */
+:root{
+  --fact-strip-h: 92px;        /* 👈 control height here */
+  --fact-strip-maxw: 1720px;   /* 👈 control max width here */
+}
+
+.fact-strip{
+  max-width: var(--fact-strip-maxw);
+  margin: 28px auto 0;
+  padding: 0 clamp(16px,2.2vw,30px);
+}
+.fact-strip-inner{
+  min-height: var(--fact-strip-h);
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 26px rgba(0,20,40,0.06);
+  transition: background .35s ease, border-color .35s ease;
+}
+
+/* ---- animated icon ---- */
+.fs-icon-wrap{
+  position:relative;
+  width:52px; height:52px;
+  flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.fs-ring{
+  position:absolute; inset:0;
+  border-radius:50%;
+  border: 1.4px dashed rgba(212,168,83,0.55);
+  animation: fsSpin 9s linear infinite;
+}
+.fs-glow{
+  position:absolute; inset:6px;
+  border-radius:50%;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  animation: fsPulse 2.6s ease-in-out infinite;
+}
+.fs-core{
+  position:relative; z-index:2;
+  width:36px; height:36px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background: var(--gold-glow);
+  border: 1px solid rgba(212,168,83,0.4);
+  color: var(--gold);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.fs-core svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.fs-icon-wrap.pop .fs-core{ animation: fsPop .5s cubic-bezier(.34,1.56,.64,1); }
+.fs-icon-wrap.pop .fs-ring{ animation: fsSpin 9s linear infinite, fsRingFlash .6s ease; }
+
+@keyframes fsSpin{ from{ transform:rotate(0);} to{ transform:rotate(360deg);} }
+@keyframes fsPulse{ 0%,100%{ transform:scale(0.85); opacity:0.6; } 50%{ transform:scale(1.15); opacity:1; } }
+@keyframes fsPop{ 0%{ transform:scale(1);} 40%{ transform:scale(1.25) rotate(8deg);} 100%{ transform:scale(1);} }
+@keyframes fsRingFlash{ 0%{ box-shadow:0 0 0 0 rgba(212,168,83,0.5);} 100%{ box-shadow:0 0 0 14px rgba(212,168,83,0);} }
+
+/* ---- content ---- */
+.fs-content{ flex:1; min-width:0; }
+.fs-label{
+  font-size:10px; text-transform:uppercase; letter-spacing:0.08em;
+  color: var(--gold); margin-bottom:3px; font-weight:600;
+}
+.fs-text{
+  font-family:'Fraunces',serif; font-weight:500; font-size:14.5px; line-height:1.4;
+  color: var(--deep-blue);
+  opacity:1; transform:translateY(0);
+  transition: opacity .28s ease, transform .28s ease;
+}
+.fs-text.fade{ opacity:0; transform:translateY(6px); }
+
+.fs-next{
+  flex-shrink:0;
+  display:flex; align-items:center; gap:6px;
+  padding:9px 16px;
+  border-radius:999px;
+  border:1px solid var(--border-light);
+  background: var(--white-glass);
+  color: var(--deep-blue);
+  font-size:12px; font-weight:600;
+  transition: border-color .18s, background .18s, transform .15s;
+}
+.fs-next:hover{ border-color: var(--gold); background: var(--gold-glow); transform: translateY(-1px); }
+.fs-next svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+
+@media (max-width:640px){
+  .fact-strip-inner{ flex-wrap:wrap; }
+  .fs-next{ order:3; width:100%; justify-content:center; }
+}
+.mock-head-right{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.mock-close-btn{
+  border:none; cursor:pointer;
+  background: var(--danger-dim);
+  border:1px solid rgba(242,84,95,0.4) !important;
+  color: var(--danger) !important;
+  transition: transform .15s, background .15s;
+}
+.mock-close-btn:hover{ background: rgba(242,84,95,0.22); transform: translateY(-1px); }
 </style>
 </head>
 <body>
@@ -2030,24 +2197,34 @@
   <!-- ===== MOCK TEST CARD ===== -->
   <div class="pc-card pc-mock" id="mockCard">
     <div class="pc-head">
-      <div class="pc-eyebrow">
-        <span class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" style="fill:currentColor"/></svg></span>
-        Mock Test
-      </div>
-      <span class="pc-xp-pill" id="mockXpPill">+10 XP per Q</span>
-    </div>
+  <div class="pc-eyebrow">
+    <span class="icon-badge">...</span>
+    Mock Test
+  </div>
+  <div class="mock-head-right">
+    <span class="pc-xp-pill" id="mockXpPill">+10 XP per Q</span>
+    <button class="pc-xp-pill mock-close-btn mock-hidden" id="mockCloseBtn" title="Close test">✕bu Close</tton>
+  </div>
+</div>
     <div class="pc-sub">Test your knowledge with 10 UPSC-style questions</div>
 
     <!-- Start state -->
     <div class="mock-test-start" id="mockStart">
-      <span class="mt-icon">📝</span>
-      <div class="mt-title">Ready for a mock test?</div>
-      <div class="mt-sub">10 questions · 90 seconds each · AI evaluation</div>
-      <button class="mock-test-btn" id="startMockBtn">
-        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Start Assessment
-      </button>
-    </div>
+  <div class="mt-icon-badge">
+    <svg viewBox="0 0 24 24"><path d="M4 21V4a1 1 0 011-1h11l4 5v13a1 1 0 01-1 1H5a1 1 0 01-1-1z"/><path d="M15 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+  </div>
+  <div class="mt-title">Ready for a mock test?</div>
+  <div class="mt-sub">10 questions · 90 seconds each · AI evaluation</div>
+  <div class="mt-stats-row">
+    <span class="mt-stat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg> 90s/question</span>
+    <span class="mt-stat"><svg viewBox="0 0 24 24"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg> AI graded</span>
+    <span class="mt-stat"><svg viewBox="0 0 24 24"><path d="M4 21V4a1 1 0 011-1h11l4 5v13a1 1 0 01-1 1H5a1 1 0 01-1-1z"/><path d="M15 3v5h5"/></svg> 10 Qs</span>
+  </div>
+  <button class="mock-test-btn" id="startMockBtn">
+    <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Start Assessment
+  </button>
+</div>
 
     <!-- Test interface (hidden until start) -->
     <div class="mock-hidden" id="mockInterface">
@@ -2166,54 +2343,71 @@
 
 </div>
 
+<!-- ===== FACT STRIP ===== -->
+<div class="fact-strip">
+  <div class="fact-strip-inner">
+    <div class="fs-icon-wrap" id="fsIconWrap">
+      <span class="fs-ring"></span>
+      <span class="fs-glow"></span>
+      <span class="fs-core">
+        <svg viewBox="0 0 24 24"><path d="M12 2a15 15 0 010 20M12 2a15 15 0 000 20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
+      </span>
+    </div>
+    <div class="fs-content">
+      <div class="fs-label">Geography fact</div>
+      <div class="fs-text" id="fsText">Loading fact…</div>
+    </div>
+    <button class="fs-next" id="fsNextBtn">
+      Next fact
+      <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</div>
+
 <footer>
   <div class="footer-grid">
-    <div>
-      <div class="footer-brand">
-        <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
-          <circle cx="20" cy="20" r="18" stroke="#D4A853" stroke-width="1.6"/>
-          <path d="M20 5 L23 18 L20 20 L17 18 Z" fill="#EAC072"/>
-          <path d="M20 35 L23 22 L20 20 L17 22 Z" fill="#748A98"/>
-          <circle cx="20" cy="20" r="2.4" fill="#1A2E3B"/>
-        </svg>
-        <div class="name">Terra Prep</div>
-      </div>
-      <p class="footer-about">A map-first way to learn world geography — built for exam aspirants who'd rather explore a place than memorize a list.</p>
+  <div>
+    <div class="footer-brand">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" stroke="#D4A853" stroke-width="1.6"/>
+        <path d="M20 5 L23 18 L20 20 L17 18 Z" fill="#EAC072"/>
+        <path d="M20 35 L23 22 L20 20 L17 22 Z" fill="#748A98"/>
+        <circle cx="20" cy="20" r="2.4" fill="#1A2E3B"/>
+      </svg>
+      <div class="name">Terra Prep</div>
     </div>
-    <div class="footer-col">
-      <h4>Explore</h4>
-      <ul>
-        <li><a href="#">Map home</a></li>
-        <li><a href="#">Current affairs</a></li>
-        <li><a href="#">Practice questions</a></li>
-        <li><a href="#">Collections</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Account</h4>
-      <ul>
-        <li><a href="#">Bookmarks</a></li>
-        <li><a href="#">Progress</a></li>
-        <li><a href="#">Leaderboards</a></li>
-        <li><a href="#">Settings</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Support</h4>
-      <ul>
-        <li><a href="#">Help centre</a></li>
-        <li><a href="#">Contact us</a></li>
-        <li><a href="#">Privacy policy</a></li>
-        <li><a href="#">Terms of use</a></li>
-      </ul>
-    </div>
+    <p class="footer-about">A map-first way to learn world geography — built for exam aspirants who'd rather explore a place than memorize a list.</p>
+  </div>
+
+  <div class="footer-col">
+    <h4>Support</h4>
+    <ul>
+      <li><a href="#">Help centre</a></li>
+      <li><a href="#">Contact us</a></li>
+      <li><a href="#">Privacy policy</a></li>
+      <li><a href="#">Terms of use</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Follow Us</h4>
+    <ul class="footer-follow-list">
+      <li><a href="#"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg> Facebook</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg> Instagram</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg> Twitter (X)</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Subscribe our newsletter</h4>
+    <form class="newsletter-form" onsubmit="return false;">
+      <input type="email" class="newsletter-input" placeholder="Your email address" required />
+      <button type="submit" class="newsletter-btn">Subscribe</button>
+    </form>
+  </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Terra Prep. Built for aspirants, not algorithms.</span>
-    <div class="footer-social">
-      <a href="#" aria-label="Instagram">📷</a>
-      <a href="#" aria-label="YouTube">▶️</a>
-      <a href="#" aria-label="Twitter">🐦</a>
+    <span>© 2026 Terra Prep. All rights reserved.</span>
     </div>
   </div>
 </footer>
@@ -2548,11 +2742,11 @@ function renderDetail(key){
             <span class="arrow">›</span>
           </div>`).join('')}
       </div>
-      <button class="cta-btn">${ICONS.rocket} Start learning</button>
+      <button class="cta-btn" onclick="window.location.href='https://abhu001987.github.io/Test/newpa'">${ICONS.rocket} Start learning</button>
     </div>
   `;
 }
-
+  
 // ---------- MAP ----------
 const map = L.map('worldMap', {
   center:[18, 20], zoom:2, minZoom:2, maxZoom:18,
@@ -3409,6 +3603,7 @@ function startMockTest() {
   
   mockStart.style.display = 'none';
   mockInterface.classList.remove('mock-hidden');
+  document.getElementById('mockCloseBtn').classList.remove('mock-hidden');
   mockRetryLink.style.display = 'none';
   loadMockQuestion(0);
 }
@@ -3426,7 +3621,16 @@ function loadMockQuestion(index) {
   updateMockProgress();
   startMockTimer();
 }
-
+function closeMockTest(){
+  clearInterval(mockState.timer);
+  if (mockState.recognition) {
+    mockState.recognition.stop();
+    mockState.isListening = false;
+  }
+  mockInterface.classList.add('mock-hidden');
+  mockStart.style.display = 'flex';
+  document.getElementById('mockCloseBtn').classList.add('mock-hidden');
+}
 function startMockTimer() {
   clearInterval(mockState.timer);
   mockState.timeLeft = 90;
@@ -3731,6 +3935,7 @@ function toggleMockVoice() {
 
 // Event bindings for mock test
 document.getElementById('startMockBtn').addEventListener('click', startMockTest);
+document.getElementById('mockCloseBtn').addEventListener('click', closeMockTest);
 mqVoiceBtn.addEventListener('click', toggleMockVoice);
 mqSubmitBtn.addEventListener('click', submitMockAnswer);
 
@@ -3811,11 +4016,39 @@ console.log('🚀 Terra Prep ready with Mock Test!');
   nextEl.addEventListener('click', ()=>{ idx++; loadAnimal(idx); });
   loadAnimal(0);
 })();
+(function(){
+  const FACTS = [
+    "The Tropic of Cancer passes through 8 Indian states, from Gujarat to Mizoram.",
+    "Lake Baikal in Russia holds about 20% of the world's unfrozen fresh water.",
+    "The Dead Sea's shoreline is the lowest point on Earth's land surface, at about 430m below sea level.",
+    "The Amazon River discharges more water than the next seven largest rivers combined.",
+    "Mount Kilimanjaro is a free-standing mountain — not part of any mountain range.",
+    "The Sahara Desert was once a lush, green savannah about 10,000 years ago.",
+    "Russia spans 11 time zones, more than any other country.",
+    "The Ring of Fire accounts for about 90% of the world's earthquakes.",
+    "The Ganga-Brahmaputra Delta is the largest river delta in the world.",
+    "Antarctica is technically the largest desert on Earth by area."
+  ];
+  let fi = 0;
+  const textEl = document.getElementById('fsText');
+  const iconWrap = document.getElementById('fsIconWrap');
+  const nextBtn = document.getElementById('fsNextBtn');
+
+  function showFact(i){
+    textEl.classList.add('fade');
+    setTimeout(()=>{
+      textEl.textContent = FACTS[i % FACTS.length];
+      textEl.classList.remove('fade');
+    }, 220);
+    iconWrap.classList.remove('pop');
+    void iconWrap.offsetWidth; // restart animation
+    iconWrap.classList.add('pop');
+  }
+  nextBtn.addEventListener('click', ()=>{ fi++; showFact(fi); });
+  showFact(0);
+  setInterval(()=>{ fi++; showFact(fi); }, 6000);
+})();
 </script>
 
 </body>
 </html>
-
-
-
-
