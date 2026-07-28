@@ -9,7 +9,7 @@
 <script>
   (function() {
     try {
-      var theme = localStorage.getItem('theme') || 'dark';
+      var theme = localStorage.getItem('terra-site-theme') || 'light';
       document.documentElement.setAttribute('data-theme', theme);
     } catch (e) {}
   })();
@@ -1350,18 +1350,14 @@ setTimeout(syncNavHeight, 900);
 /* ---------------- Shared header: theme + navigation ---------------- */
 document.addEventListener('DOMContentLoaded', function() {
   var themeToggle = document.getElementById('themeToggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', function() {
-      if (typeof toggleTheme === 'function') {
-        toggleTheme();
-      } else {
-        var html = document.documentElement;
-        var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        html.setAttribute('data-theme', next);
-        try { localStorage.setItem('theme', next); } catch (e) {}
-      }
-      setTimeout(function(){ try { map.invalidateSize(); } catch(e){} }, 320);
-    });
+if (themeToggle) {
+  themeToggle.addEventListener('click', function() {
+    var html = document.documentElement;
+    var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('terra-site-theme', next); } catch (e) {}
+    setTimeout(function(){ try { map.invalidateSize(); } catch(e){} }, 320);
+  });
   }
 });
 
