@@ -38,7 +38,7 @@
     --white-glass: rgba(255, 255, 255, 0.55);
     --card-bg: rgba(255, 255, 255, 0.55);
     --border-light: rgba(11, 42, 60, 0.08);
-    --body-bg: linear-gradient(135deg, #D6E4FF 0%, #E8D5FF 40%, #D5F5E3 100%);
+    --body-bg: #EAE4F7;
     --mint: #3ED598;
     --blue: #5B7FFF;
     --violet: #8B7CF6;
@@ -144,23 +144,23 @@
   @keyframes floatOrb{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(28px,-22px) scale(1.07);} }
 
   /* ---------- Hero ---------- */
-  .hero{ position:relative; z-index:1; padding:150px 0 20px; text-align:center; }
+  .hero{ position:relative; z-index:1; padding:80px 0 20px; text-align:center; }
   .kicker{
     display:inline-flex; align-items:center; gap:7px;
     background:var(--gold-glow); border:1px solid rgba(212,168,83,0.3); color:var(--gold);
     padding:5px 14px; border-radius:20px; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase;
-    font-weight:700; margin-bottom:20px;
+    font-weight:700; margin-bottom:16px;
   }
   .kicker svg{ width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
   h1.hero-title{
     font-family:'Fraunces',serif; font-weight:600; font-size:clamp(34px,6vw,58px); line-height:1.06;
-    letter-spacing:-0.01em; margin:0 0 18px; color:var(--deep-blue);
+    letter-spacing:-0.01em; margin:0 0 14px; color:var(--deep-blue);
   }
   h1.hero-title em{ font-style:italic; color:var(--gold); }
   .hero-sub{ max-width:560px; margin:0 auto; color:var(--ink-soft); font-size:15.5px; line-height:1.65; }
   .hero-sub b{ color:var(--deep-blue); }
 
-  .stamp-row{ display:flex; justify-content:center; gap:14px; margin-top:30px; flex-wrap:wrap; }
+  .stamp-row{ display:flex; justify-content:center; gap:14px; margin-top:24px; flex-wrap:wrap; }
   .stamp{
     font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase;
     border:1.4px dashed rgba(212,168,83,0.55); border-radius:10px; padding:8px 13px;
@@ -278,9 +278,45 @@
   .cta-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(212,168,83,0.4); }
   .cta-btn svg{ width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
-  /* ---------- Footer note ---------- */
-  .foot-note{ text-align:center; margin-top:34px; font-size:11.5px; color:var(--muted); }
-  .foot-note a{ color:var(--gold); text-decoration:underline; text-underline-offset:2px; }
+  /* ---------- Footer ---------- */
+  .site-footer {
+    margin-top: 60px;
+    padding: 30px 0 20px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .site-footer a {
+    color: var(--muted);
+    transition: color 0.2s ease;
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    color: var(--gold);
+  }
+  .site-footer .footer-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .site-footer .copy {
+    font-size: 11px;
+    color: var(--muted-light);
+  }
+  @media (max-width: 480px) {
+    .site-footer {
+      flex-direction: column;
+      text-align: center;
+    }
+    .site-footer .footer-links {
+      justify-content: center;
+    }
+  }
 
   /* ---------- Entrance ---------- */
   @keyframes fadeUp{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:none; } }
@@ -470,6 +506,17 @@
     </div>
     <div class="foot-note">Spotted a wrong fact, a broken map pin, or a joke that didn't land? <a href="index.html">Tell us anyway</a> — we take feedback better than we take criticism about our chai addiction.</div>
   </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <span class="copy">© 2026 Mapisto · Terra Prep</span>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </footer>
 
 </div>
 
