@@ -628,7 +628,7 @@
     .cta-block {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, var(--deep-blue), var(--deep-blue-soft));
+      background: linear-gradient(135deg, #0B2A3C, #1A3B4F);
       border-radius: 24px;
       padding: 40px clamp(20px, 4vw, 50px);
       text-align: center;
@@ -643,26 +643,28 @@
       width: 260px;
       height: 260px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(227,179,104,0.28), transparent 70%);
+      background: radial-gradient(circle, rgba(227,179,104,0.15), transparent 70%);
       pointer-events: none;
     }
     .cta-block h3 {
       font-family: 'Fraunces', serif;
       font-weight: 600;
       font-size: clamp(22px, 4vw, 30px);
-      color: #ffffff;
+      color: #FFFFFF;
       margin: 0 0 10px;
       position: relative;
       z-index: 1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
     .cta-block p {
-      color: rgba(255, 255, 255, 0.9);
+      color: #FFFFFF;
       font-size: 13.5px;
       margin: 0 0 22px;
       position: relative;
       z-index: 1;
       font-weight: 400;
       line-height: 1.6;
+      opacity: 0.92;
     }
     .cta-btn {
       position: relative;
@@ -670,8 +672,8 @@
       display: inline-flex;
       align-items: center;
       gap: 9px;
-      background: var(--gold);
-      color: var(--deep-blue);
+      background: #D4A853;
+      color: #0B2A3C;
       font-weight: 700;
       font-size: 14px;
       padding: 13px 28px;
@@ -693,6 +695,25 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+
+    /* Dark theme CTA override */
+    [data-theme="dark"] .cta-block {
+      background: linear-gradient(135deg, #0A1A28, #162B3D);
+    }
+    [data-theme="dark"] .cta-block h3 {
+      color: #F1EADA;
+    }
+    [data-theme="dark"] .cta-block p {
+      color: #D9CFB8;
+      opacity: 1;
+    }
+    [data-theme="dark"] .cta-btn {
+      background: #E3B368;
+      color: #0A1A28;
+    }
+    [data-theme="dark"] .cta-btn:hover {
+      box-shadow: 0 10px 24px rgba(227,179,104,0.4);
     }
 
     /* Footer note - FIXED VISIBILITY */
