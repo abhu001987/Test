@@ -361,10 +361,24 @@
     }
 
     .privacy-content {
-      max-width: 760px;
-      margin: 0 auto;
-      text-align: left;
+    width: 100%;
+    max-width: 1100px;   /* Increased from 760px */
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .privacy-content {
+        padding: 0 16px;
     }
+}
+
+@media (max-width: 480px) {
+    .privacy-content {
+        padding: 0 12px;
+    }
+}
 
     .privacy-content .kicker {
       display: inline-flex;
