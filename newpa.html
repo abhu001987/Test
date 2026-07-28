@@ -1369,18 +1369,7 @@ function closeExitDialog() {
   document.getElementById('exit-dialog-overlay').classList.remove('show');
 }
 function confirmExit() {
-  closeExitDialog();
-  markerLayer.clearLayers();
-  document.getElementById('screen-end').classList.add('hidden');
-  document.getElementById('screen-invite').classList.add('hidden');
-  document.getElementById('screen-start').classList.remove('hidden');
-  document.getElementById('challenge-flag').classList.remove('show');
-  setMapVisible(false);
-  setHeaderVisible(true);
-  roundIdx = 0;
-  scores = [];
-  results = [];
-  guessed = false;
+  window.location.href = 'index.html';
 }
 
 /* ---------------- Header visibility ---------------- */
