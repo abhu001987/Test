@@ -672,8 +672,8 @@
       display: inline-flex;
       align-items: center;
       gap: 9px;
-      background: #1A3B4F;
-      color: #FFFFFF;
+      background: #EAC072;
+      color: #0B2A3C;
       font-weight: 700;
       font-size: 14px;
       padding: 13px 28px;
@@ -682,15 +682,18 @@
       border: none;
       cursor: pointer;
       text-decoration: none;
+      text-shadow: 0 0 20px rgba(11,42,60,0.15);
+      box-shadow: 0 4px 15px rgba(212,168,83,0.3);
     }
     .cta-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(26,59,79,0.4);
+      box-shadow: 0 8px 30px rgba(212,168,83,0.5);
+      text-shadow: 0 0 30px rgba(11,42,60,0.25);
     }
     .cta-btn svg {
       width: 16px;
       height: 16px;
-      stroke: #FFFFFF;
+      stroke: #0B2A3C;
       fill: none;
       stroke-width: 2;
       stroke-linecap: round;
@@ -711,12 +714,15 @@
     [data-theme="dark"] .cta-btn {
       background: #E3B368;
       color: #0A1A28;
+      text-shadow: 0 0 20px rgba(10,26,40,0.2);
+      box-shadow: 0 4px 15px rgba(227,179,104,0.25);
     }
     [data-theme="dark"] .cta-btn svg {
       stroke: #0A1A28;
     }
     [data-theme="dark"] .cta-btn:hover {
-      box-shadow: 0 10px 24px rgba(227,179,104,0.4);
+      box-shadow: 0 8px 30px rgba(227,179,104,0.45);
+      text-shadow: 0 0 30px rgba(10,26,40,0.3);
     }
 
     /* Footer note */
