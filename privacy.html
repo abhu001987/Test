@@ -339,29 +339,29 @@
     }
 
     /* ============================================ */
-    /* PRIVACY PAGE — edge-to-edge, just a tiny bit of padding */
+    /* PRIVACY PAGE — edge-to-edge, minimal padding (8px on sides) */
     .privacy-wrap {
       flex: 1;
       max-width: 100%;
       margin: 0;
-      padding: calc(var(--nav-height, 92px) + 20px) 16px 30px;
+      padding: calc(var(--nav-height, 92px) + 16px) 8px 20px;
       width: 100%;
       position: relative;
       z-index: 1;
     }
     @media (max-width: 768px) {
       .privacy-wrap {
-        padding: calc(var(--nav-height, 80px) + 24px) 14px 24px;
+        padding: calc(var(--nav-height, 80px) + 20px) 8px 16px;
       }
     }
     @media (max-width: 480px) {
       .privacy-wrap {
-        padding: calc(var(--nav-height, 80px) + 24px) 10px 20px;
+        padding: calc(var(--nav-height, 80px) + 20px) 6px 14px;
       }
     }
 
     .privacy-content {
-      max-width: 780px;
+      max-width: 760px;
       margin: 0 auto;
       text-align: left;
     }
@@ -379,14 +379,14 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       font-weight: 700;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .privacy-content h1 {
       font-family: 'Fraunces', serif;
       font-weight: 600;
       font-size: clamp(26px, 5vw, 38px);
       color: var(--deep-blue);
-      margin: 0 0 6px;
+      margin: 0 0 4px;
       letter-spacing: -0.01em;
       text-align: left;
     }
@@ -394,7 +394,7 @@
       font-size: 14px;
       color: var(--ink-soft);
       line-height: 1.6;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       text-align: left;
     }
     .privacy-content .content {
@@ -404,7 +404,7 @@
       text-align: left;
     }
     .privacy-content .content p {
-      margin: 0 0 14px;
+      margin: 0 0 12px;
       text-align: left;
     }
     .privacy-content .content h2 {
@@ -412,20 +412,20 @@
       font-weight: 600;
       font-size: 18px;
       color: var(--deep-blue);
-      margin: 26px 0 8px;
+      margin: 22px 0 6px;
       letter-spacing: -0.01em;
       text-align: left;
     }
     .privacy-content .content h2:first-of-type {
-      margin-top: 4px;
+      margin-top: 2px;
     }
     .privacy-content .content ul {
-      padding-left: 22px;
-      margin: 6px 0 16px;
+      padding-left: 20px;
+      margin: 4px 0 14px;
       text-align: left;
     }
     .privacy-content .content ul li {
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       text-align: left;
     }
     .privacy-content .content a {
@@ -440,8 +440,8 @@
 
     /* Footer — exact same style as game menu-footer */
     .menu-footer {
-      margin-top: 28px;
-      padding-top: 18px;
+      margin-top: 24px;
+      padding-top: 16px;
       border-top: 1px solid var(--border-light);
       display: flex;
       justify-content: space-between;
@@ -569,7 +569,7 @@
   </div>
 </div>
 
-<!-- PRIVACY CONTENT — edge-to-edge, minimal padding -->
+<!-- PRIVACY CONTENT — edge-to-edge with only 8px padding -->
 <main class="privacy-wrap">
   <div class="privacy-content">
     <div class="kicker">🔒 Privacy</div>
