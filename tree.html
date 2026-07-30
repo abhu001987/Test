@@ -1532,13 +1532,15 @@ let currentGameCode = null; // set once a challenge is created OR accepted
 let challengeCreated = false; // guards duplicate /game/create calls this session
 let resultPosted = false;     // guards duplicate /game/update calls this session
 
-function shuffleIdx(n){
+const ROUNDS_PER_GAME = 10; // how many straits per game — bump this up later as you add more to STRAITS
+
+function shuffleIdx(n, count){
   const a = Array.from({length:n}, (_,i)=>i);
   for(let i=a.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
     [a[i],a[j]]=[a[j],a[i]];
   }
-  return a;
+  return typeof count === 'number' ? a.slice(0, count) : a;
 }
 
 function haversine(lat1,lon1,lat2,lon2){
