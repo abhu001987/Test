@@ -1970,6 +1970,8 @@ async function ensureChallengeLinkReady(){
   copyBtn.textContent = '...';
   try{
     const gameCode = await createChallengeOnDemand(currentAvgScore, scores);
+    saveMyChallenge(gameCode, currentAvgScore, scores);
+document.getElementById('check-reply-btn').style.display = 'inline-block';
     const link = buildLinkFromGameCode(gameCode);
     linkInput.value = link;
 
