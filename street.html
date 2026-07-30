@@ -2167,11 +2167,33 @@ async function acceptPastedChallenge(){
     const params = new URLSearchParams(window.location.search);
     const g = params.get('g');
     if(!g) return;
+    const mine = myChallenges();
+    if(mine[g]){
+      fetchGame(g).then(data=>{
+        currentGameCode = g;
+        currentAvgScore = mine[g].avg;
+        scores = mine[g].scores;
+        mode = 'challenge';
+        document.getElementById('screen-start').classList.add('hidden');
+        document.getElementById('score-hero').style.display = 'none';
+        document.getElementById('final-score').textContent = currentAvgScore + '%';
+        document.getElementById('final-msg').textContent = '';
+        document.getElementById('screen-end').classList.remove('hidden');
+        setMapVisible(false);
+        setHeaderVisible(true);
+        if(data.status === 'completed' && data.challengedResults){
+          showReplyComparison(data);
+        } else {
+          document.getElementById('check-reply-btn').style.display = 'inline-block';
+          showToast("Still waiting on your friend to play");
+        }
+      }).catch(e=>console.warn('Could not load your challenge:', e));
+      return;
+    }
     fetchGame(g).then(gameData=>{
       showChallengeInvite(g, gameData);
     }).catch(e=>{
       console.warn('Could not load challenge from URL:', e);
-      // Fall back to the normal start screen if the link is bad/expired.
     });
   }catch(e){ /* ignore malformed links, fall back to start screen */ }
 })();
