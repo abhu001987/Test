@@ -1295,6 +1295,10 @@
           <input id="challenge-link" readonly placeholder="Tap Copy to generate your link…">
           <button class="copy-btn" id="copy-link-btn" onclick="copyChallengeLink()">Copy</button>
         </div>
+
+        <!-- ADD THE NEW BUTTON RIGHT HERE, after link-box, before share-icons -->
+  <button class="btn btn-ghost" id="check-reply-btn" style="width:100%;margin:4px 0 12px;display:none;" onclick="checkForReply()">Check if they've replied</button>
+        
         <div class="share-icons">
           <a id="wa-share" class="disabled" href="#" target="_blank" rel="noopener" onclick="return handleShareIconClick(event, 'wa')">
             <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.07-1.32A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.16 14.13c-.22.63-1.28 1.2-1.77 1.24-.45.05-.9.24-3.03-.63-2.57-1.05-4.22-3.63-4.35-3.8-.13-.17-1.04-1.38-1.04-2.63 0-1.25.66-1.86.9-2.12.23-.25.5-.32.67-.32.17 0 .34 0 .48.01.16.01.36-.06.56.42.22.53.75 1.83.82 1.96.07.13.11.29.02.46-.09.17-.14.27-.27.42-.13.15-.28.33-.4.44-.13.13-.27.27-.11.53.15.26.68 1.12 1.46 1.81 1 .89 1.85 1.17 2.11 1.3.27.13.42.11.58-.07.16-.17.66-.77.84-1.04.18-.26.35-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.5.31.07.11.07.65-.15 1.28z"/></svg>
