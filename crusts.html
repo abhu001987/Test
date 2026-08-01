@@ -173,10 +173,21 @@
   #map-viewport{ flex:1 1 auto;position:relative;overflow:hidden; margin:0 8px 8px; min-height:0; border-radius:18px; border:1px solid var(--glass-brd); box-shadow: var(--glass-shadow); isolation:isolate; z-index:0; background:radial-gradient(ellipse at 50% 30%, var(--space-1), var(--space-0)); }
   #map-viewport.screen-covered{visibility:hidden;}
   #stars-layer{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-  .star{ position:absolute; border-radius:50%; background:var(--star); opacity:.15; animation:twinkle 3.4s ease-in-out infinite; }
-  @keyframes twinkle{ 0%,100%{opacity:.12;} 50%{opacity:.9;} }
+  .star{ position:absolute; border-radius:50%; background:var(--star); opacity:.15; animation:twinkle 3.4s ease-in-out infinite; box-shadow:0 0 4px rgba(234,242,255,.6); }
+  @keyframes twinkle{ 0%,100%{opacity:.1; transform:scale(.75);} 50%{opacity:1; transform:scale(1.15);} }
+  .shooting-star{ position:absolute; width:2px; height:2px; border-radius:50%; background:#fff; opacity:0;
+    box-shadow:0 0 6px 1px rgba(255,255,255,.8); }
+  .shooting-star::after{ content:""; position:absolute; top:50%; right:0; width:90px; height:1.4px; transform:translateY(-50%);
+    background:linear-gradient(90deg, rgba(255,255,255,.9), transparent); }
+  @keyframes shootAcross{
+    0%{ opacity:0; transform:translate(0,0) rotate(-32deg); }
+    6%{ opacity:1; }
+    75%{ opacity:1; }
+    100%{ opacity:0; transform:translate(-320px,200px) rotate(-32deg); }
+  }
+  .shooting-star.go{ animation:shootAcross 1.5s linear forwards; }
   #earth-wrap{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:14px; cursor:crosshair; }
-  #earth-svg{ width:100%; height:100%; max-width:900px; max-height:900px; display:block; touch-action:none; }
+  #earth-svg{ width:100%; height:100%; max-width:1080px; max-height:1080px; display:block; touch-action:none; }
   .leader-line{ stroke:var(--gold-bright); stroke-width:1; stroke-dasharray:3 3; opacity:.55; }
   .leader-dot{ fill:var(--gold-bright); }
   .leader-label{ font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; fill:var(--star); letter-spacing:.04em; }
@@ -196,6 +207,15 @@
   @keyframes markerPop{ from{ transform:scale(0); } 60%{ transform:scale(1.3); } to{ transform:scale(1); } }
   #radial-line{ stroke:var(--muted-light); stroke-width:1.4; stroke-dasharray:4 4; opacity:0; }
   #radial-line.show{ opacity:.8; }
+
+  .answer-point{ cursor:pointer; }
+  .answer-point-hit{ fill:transparent; pointer-events:all; }
+  .answer-point-dot{ fill:#fff8e8; stroke:var(--gold-bright); stroke-width:1.6; pointer-events:none;
+    animation: pointBreathe 2.4s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes pointBreathe{ 0%,100%{ opacity:.75; transform:scale(1); } 50%{ opacity:1; transform:scale(1.35); } }
+  .answer-point.done .answer-point-dot{ animation:none; opacity:.35; }
+  .answer-point.correct .answer-point-dot{ animation:none; fill:var(--teal); stroke:var(--teal); opacity:1; }
+  .answer-point.picked .answer-point-dot{ animation:none; fill:var(--coral); stroke:var(--coral); opacity:1; }
 
   /* ---------- BOTTOM PANEL ---------- */
   #hud-bottom{ z-index:500;padding:8px 10px 12px; display:flex;flex-direction:column;align-items:center;gap:8px; }
@@ -402,9 +422,10 @@
     #screen-end .btn-row, #screen-end .share-block,
     .icon-circle.pulse-ring::before, .icon-circle.pulse-ring::after,
     .icon-circle.shimmer::after, .vs-side.rival, .vs-side.you, .vs-badge, .b-row,
-    .star, #core-glow-ring, .fx-layer-pulse{
+    .star, #core-glow-ring, .fx-layer-pulse, .shooting-star, .answer-point-dot{
       animation: none !important; opacity:1 !important; transform:none !important;
     }
+    .shooting-star{ display:none !important; }
   }
 </style>
 </head>
@@ -689,7 +710,7 @@
   <div id="map-viewport">
     <div id="stars-layer"></div>
     <div id="earth-wrap">
-      <svg id="earth-svg" viewBox="0 0 620 600" xmlns="http://www.w3.org/2000/svg">
+      <svg id="earth-svg" viewBox="0 0 760 640" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="oceanGrad" cx="38%" cy="35%" r="75%">
             <stop offset="0%" stop-color="var(--ocean-2)"/>
@@ -713,25 +734,28 @@
           <path id="layer-lowerCrust" class="layer-band" fill="var(--crust-2)"></path>
           <path id="layer-upperCrust" class="layer-band" fill="var(--crust-1)"></path>
           <path id="layer-innerCore" class="layer-band" fill="url(#coreGrad)"></path>
-          <circle id="core-glow-ring" cx="300" cy="300" r="40" fill="none" stroke="#ffe27a" stroke-width="2" opacity=".5"></circle>
+          <circle id="core-glow-ring" cx="270" cy="310" r="44" fill="none" stroke="#ffe27a" stroke-width="2" opacity=".5"></circle>
         </g>
 
-        <line id="seam-line" x1="300" y1="70" x2="300" y2="530"></line>
-        <circle id="globe-outline" cx="300" cy="300" r="230"></circle>
+        <line id="seam-line" x1="270" y1="60" x2="270" y2="560"></line>
+        <circle id="globe-outline" cx="270" cy="310" r="250"></circle>
 
         <!-- legend leader lines: Crust / Mantle / Outer Core / Inner Core -->
         <g id="legend-layer"></g>
 
+        <!-- the 5 clickable discontinuity points — always visible, user picks one per round -->
+        <g id="answer-points"></g>
+
         <!-- gameplay markers -->
         <line id="radial-line" x1="0" y1="0" x2="0" y2="0"></line>
-        <circle id="target-ring" cx="300" cy="300" r="0"></circle>
+        <circle id="target-ring" cx="270" cy="310" r="0"></circle>
         <g id="guess-marker" class="guess-marker">
-          <circle r="9" fill="none" stroke="var(--coral)" stroke-width="1.6"></circle>
-          <circle r="4" fill="var(--coral)"></circle>
+          <circle r="11" fill="none" stroke="var(--coral)" stroke-width="1.8"></circle>
+          <circle r="4.5" fill="var(--coral)"></circle>
         </g>
         <g id="target-marker" class="target-marker">
-          <circle r="9" fill="none" stroke="var(--gold)" stroke-width="1.6"></circle>
-          <circle r="4" fill="var(--gold)"></circle>
+          <circle r="11" fill="none" stroke="var(--gold)" stroke-width="1.8"></circle>
+          <circle r="4.5" fill="var(--gold)"></circle>
         </g>
       </svg>
     </div>
@@ -745,7 +769,7 @@
     </div>
     <div class="hint-tap" id="tap-hint">
       <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 116 0c0 2-3 3-3 5"/><circle cx="12" cy="19" r="0.6" style="fill:currentColor"/></svg>
-      Tap the cutaway where you think this boundary sits
+      Click the marked point where you think this boundary sits
     </div>
     <button class="btn btn-primary" id="next-btn" style="display:none" onclick="nextRound()">Next Boundary →</button>
   </div>
@@ -801,20 +825,22 @@ function setHeaderVisible(visible){
 // r = radius fraction (0=centre, 1=surface) used for the *diagram* — exaggerated
 // vs. real Earth proportions (like every textbook cutaway) so the crust reads
 // clearly. depth = the real, non-exaggerated figure shown in the fact panel.
+// pointAngleDeg places that discontinuity's clickable dot on its boundary ring —
+// angles are staggered so the 5 dots never sit close enough to overlap.
 const DISCONTINUITIES = [
-  { id:'conrad', name:'Conrad Discontinuity', between:'Upper Crust ↔ Lower Crust', r:0.95,
+  { id:'conrad', name:'Conrad Discontinuity', between:'Upper Crust ↔ Lower Crust', r:0.95, pointAngleDeg:-85,
     depth:'≈15–20 km down', adj:['upperCrust','lowerCrust'],
     fact:"Marks a change in rock type inside the crust itself — lighter, granite-like rock above gives way to denser, basalt-like rock below. It isn't found everywhere on Earth and shows up most clearly under continents." },
-  { id:'moho', name:'Mohorovičić Discontinuity', between:'Crust ↔ Mantle', r:0.88,
+  { id:'moho', name:'Mohorovičić Discontinuity', between:'Crust ↔ Mantle', r:0.88, pointAngleDeg:-55,
     depth:'≈5–70 km down (avg. ~35 km)', adj:['lowerCrust','upperMantle'],
     fact:"Named for the Croatian scientist who spotted it in 1909 while studying earthquake waves. Cross it and seismic waves suddenly speed up as they enter the denser rock of the mantle." },
-  { id:'repetti', name:'Repetti Discontinuity', between:'Upper Mantle ↔ Lower Mantle', r:0.66,
+  { id:'repetti', name:'Repetti Discontinuity', between:'Upper Mantle ↔ Lower Mantle', r:0.66, pointAngleDeg:-20,
     depth:'≈660 km down', adj:['upperMantle','lowerMantle'],
     fact:"Splits the mantle into an upper zone where tectonic plates grind and shift, and a lower zone of slower, more uniform rock flow — part of what's often called the mantle transition zone." },
-  { id:'gutenberg', name:'Gutenberg Discontinuity', between:'Mantle ↔ Outer Core', r:0.40,
+  { id:'gutenberg', name:'Gutenberg Discontinuity', between:'Mantle ↔ Outer Core', r:0.40, pointAngleDeg:15,
     depth:'≈2,900 km down', adj:['lowerMantle','outerCore'],
     fact:"The point where fast-moving S-waves from earthquakes vanish completely — the clue that first revealed the outer core is liquid metal, not solid rock." },
-  { id:'lehmann', name:'Lehmann Discontinuity', between:'Outer Core ↔ Inner Core', r:0.18,
+  { id:'lehmann', name:'Lehmann Discontinuity', between:'Outer Core ↔ Inner Core', r:0.18, pointAngleDeg:50,
     depth:'≈5,150 km down', adj:['outerCore','innerCore'],
     fact:"Discovered by Danish seismologist Inge Lehmann in 1936. Here, immense pressure finally overcomes the heat and forces liquid iron to freeze solid at the planet's centre." }
 ];
@@ -828,19 +854,24 @@ const LAYERS = {
   innerCore:   { rOuter:0.18, rInner:0.00 }
 };
 
+// Each legend item's dot sits on that category's own outer boundary (its own
+// radius), but the LABEL is pinned to a fixed, evenly-spaced Y position —
+// decoupled from the dot's radius — via a diagonal leader line. That's what
+// keeps CRUST / MANTLE / OUTER CORE / INNER CORE from ever colliding, no
+// matter how small the inner rings are. Each also gets its own colour.
 const LEGEND = [
-  { label:'CRUST',      sub:'Solid rock shell we stand on', rMid:0.94, angleDeg:-68 },
-  { label:'MANTLE',     sub:'Slow-flowing hot rock',         rMid:0.63, angleDeg:-22 },
-  { label:'OUTER CORE', sub:'Liquid iron & nickel',           rMid:0.29, angleDeg:24 },
-  { label:'INNER CORE', sub:'Solid iron, immense pressure',   rMid:0.09, angleDeg:66 }
+  { label:'CRUST',      sub:'Solid rock shell we stand on',  r:1.00, angleDeg:-72, labelY:150, color:'#D9AE5C' },
+  { label:'MANTLE',     sub:'Slow-flowing hot rock',         r:0.88, angleDeg:-35, labelY:238, color:'#E2612C' },
+  { label:'OUTER CORE', sub:'Liquid iron & nickel',          r:0.40, angleDeg:15,  labelY:326, color:'#F2A73B' },
+  { label:'INNER CORE', sub:'Solid iron, immense pressure',  r:0.18, angleDeg:55,  labelY:414, color:'#FFD966' }
 ];
 
 const ROUNDS_PER_GAME = DISCONTINUITIES.length; // 5
 
 /* ---------------- Geometry ---------------- */
-const CX = 300, CY = 300, R = 230;
-const LEGEND_LINE_X = 470;
-const LEGEND_TEXT_X = 478;
+const CX = 270, CY = 310, R = 250;
+const LEGEND_LINE_X = 545;
+const LEGEND_TEXT_X = 553;
 
 function pt(rFrac, angleRad){
   return { x: CX + rFrac*R*Math.cos(angleRad), y: CY + rFrac*R*Math.sin(angleRad) };
@@ -867,6 +898,16 @@ function buildLayerBands(){
   });
 }
 
+function treeMarkup(x, y, s){
+  s = s || 1;
+  return `<g transform="translate(${x},${y}) scale(${s})" clip-path="url(#photoClip)">
+    <rect x="-1.3" y="-2" width="2.6" height="7" rx="0.6" fill="#4a331f"></rect>
+    <circle cx="0" cy="-7.5" r="5.2" fill="#2f5c37"></circle>
+    <circle cx="-3.6" cy="-5" r="3.9" fill="#376b41"></circle>
+    <circle cx="3.6" cy="-5" r="3.9" fill="#2a5433"></circle>
+  </g>`;
+}
+
 function buildPhotoHalf(){
   const g = document.getElementById('photo-half');
   const Ro = R;
@@ -874,14 +915,24 @@ function buildPhotoHalf(){
   const botOuter = `${CX},${CY+Ro}`;
   const oceanPath = `M ${topOuter} A ${Ro} ${Ro} 0 0 0 ${botOuter} L ${CX},${CY} Z`;
   let html = `<path d="${oceanPath}" fill="url(#oceanGrad)"></path>`;
-  // a few hand-placed "continent" blobs, purely decorative
+  // a few hand-placed "island" blobs, each with a soft outline for definition
   const blobs = [
-    'M 150,180 q -30,10 -35,45 q -5,35 30,42 q 30,6 42,-18 q 12,-24 -4,-46 q -14,-19 -33,-23 Z',
-    'M 130,300 q -22,-6 -34,14 q -12,20 4,40 q 16,20 40,10 q 20,-8 18,-32 q -2,-22 -28,-32 Z',
-    'M 175,380 q -18,18 -8,42 q 10,22 34,20 q 22,-2 26,-24 q 4,-22 -14,-36 q -18,-14 -38,-2 Z',
-    'M 205,230 q 14,-16 34,-8 q 18,8 14,28 q -4,18 -24,20 q -20,2 -28,-14 q -8,-14 4,-26 Z'
+    'M 128,158 q -30,10 -35,45 q -5,35 30,42 q 30,6 42,-18 q 12,-24 -4,-46 q -14,-19 -33,-23 Z',
+    'M 108,278 q -22,-6 -34,14 q -12,20 4,40 q 16,20 40,10 q 20,-8 18,-32 q -2,-22 -28,-32 Z',
+    'M 153,358 q -18,18 -8,42 q 10,22 34,20 q 22,-2 26,-24 q 4,-22 -14,-36 q -18,-14 -38,-2 Z',
+    'M 183,208 q 14,-16 34,-8 q 18,8 14,28 q -4,18 -24,20 q -20,2 -28,-14 q -8,-14 4,-26 Z'
   ];
-  blobs.forEach(d=>{ html += `<path d="${d}" fill="var(--land)" opacity="0.85" clip-path="url(#photoClip)"></path>`; });
+  blobs.forEach(d=>{
+    html += `<path d="${d}" fill="var(--land)" stroke="#2b4f32" stroke-width="1" opacity="0.9" clip-path="url(#photoClip)"></path>`;
+  });
+  // a few small trees dotted across each island
+  const trees = [
+    [138,182,0.95],[157,172,0.75],[128,206,0.85],
+    [98,293,0.9],[123,313,0.7],
+    [158,378,0.9],[183,393,0.7],
+    [188,210,0.85],[213,218,0.65]
+  ];
+  trees.forEach(([tx,ty,ts])=>{ html += treeMarkup(tx,ty,ts); });
   // soft cloud swirls
   const clouds = [
     {cx:150, cy:220, rx:38, ry:12, rot:-18},
@@ -893,7 +944,7 @@ function buildPhotoHalf(){
   });
   g.innerHTML = html;
 
-  // add a clip path so blobs/clouds never spill past the half-disc edge
+  // add a clip path so blobs/trees/clouds never spill past the half-disc edge
   const svg = document.getElementById('earth-svg');
   const defs = svg.querySelector('defs');
   const clip = document.createElementNS('http://www.w3.org/2000/svg','clipPath');
@@ -909,13 +960,50 @@ function buildLegend(){
   let html = '';
   LEGEND.forEach(item=>{
     const ang = item.angleDeg * Math.PI/180;
-    const p = pt(item.rMid, ang);
-    html += `<circle class="leader-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.4"></circle>`;
-    html += `<line class="leader-line" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${LEGEND_LINE_X}" y2="${p.y.toFixed(1)}"></line>`;
-    html += `<text class="leader-label" x="${LEGEND_TEXT_X}" y="${(p.y-3).toFixed(1)}">${item.label}</text>`;
-    html += `<text class="leader-sub" x="${LEGEND_TEXT_X}" y="${(p.y+11).toFixed(1)}">${item.sub}</text>`;
+    const p = pt(item.r, ang);
+    const ly = item.labelY;
+    html += `<circle class="leader-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.6" style="fill:${item.color}"></circle>`;
+    html += `<line class="leader-line" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${LEGEND_LINE_X}" y2="${ly}" style="stroke:${item.color}"></line>`;
+    html += `<circle cx="${LEGEND_LINE_X}" cy="${ly}" r="2" style="fill:${item.color}"></circle>`;
+    html += `<text class="leader-label" x="${LEGEND_TEXT_X}" y="${ly-3}" style="fill:${item.color}">${item.label}</text>`;
+    html += `<text class="leader-sub" x="${LEGEND_TEXT_X}" y="${ly+11}">${item.sub}</text>`;
   });
   g.innerHTML = html;
+}
+
+function buildAnswerPoints(){
+  const g = document.getElementById('answer-points');
+  let html = '';
+  DISCONTINUITIES.forEach((d, i)=>{
+    const ang = d.pointAngleDeg * Math.PI/180;
+    const p = pt(d.r, ang);
+    const delay = (i * 0.28).toFixed(2);
+    html += `<g class="answer-point" data-idx="${i}" data-x="${p.x.toFixed(1)}" data-y="${p.y.toFixed(1)}">
+      <circle class="answer-point-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="17"></circle>
+      <circle class="answer-point-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" style="animation-delay:${delay}s"></circle>
+    </g>`;
+  });
+  g.innerHTML = html;
+}
+
+/* ---------------- Shooting stars ---------------- */
+function spawnShootingStar(){
+  const layer = document.getElementById('stars-layer');
+  if(!layer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const s = document.createElement('div');
+  s.className = 'shooting-star';
+  s.style.left = (55 + Math.random()*35) + '%';
+  s.style.top = (4 + Math.random()*20) + '%';
+  layer.appendChild(s);
+  requestAnimationFrame(()=> s.classList.add('go'));
+  setTimeout(()=> s.remove(), 1700);
+}
+function startShootingStars(){
+  function loop(){
+    spawnShootingStar();
+    setTimeout(loop, 3800 + Math.random()*4200);
+  }
+  setTimeout(loop, 1800 + Math.random()*2000);
 }
 
 function buildStars(){
@@ -940,7 +1028,9 @@ function buildStars(){
 buildLayerBands();
 buildPhotoHalf();
 buildLegend();
+buildAnswerPoints();
 buildStars();
+startShootingStars();
 
 /* ---------------- Game state ---------------- */
 let order = [];
@@ -998,6 +1088,9 @@ function beginRound(){
 function loadRound(){
   guessed = false;
   hideMarkers();
+  document.querySelectorAll('.answer-point').forEach(el=>{
+    el.classList.remove('done','correct','picked');
+  });
   document.getElementById('feedback').classList.remove('show');
   document.getElementById('rival-line').style.display = 'none';
   document.getElementById('next-btn').style.display = 'none';
@@ -1087,53 +1180,51 @@ function pulseLayers(keys){
 }
 
 const earthSvg = document.getElementById('earth-svg');
-earthSvg.addEventListener('click', onStageClick);
+const answerPointsLayer = document.getElementById('answer-points');
+answerPointsLayer.addEventListener('click', onPointClick);
 
-function onStageClick(evt){
+function onPointClick(evt){
   if(guessed) return;
+  const dotEl = evt.target.closest('.answer-point');
+  if(!dotEl) return; // clicked the gap between points — ignore, points are the only valid targets
   guessed = true;
 
-  const rect = earthSvg.getBoundingClientRect();
-  const vb = earthSvg.viewBox.baseVal;
-  const scaleX = vb.width / rect.width, scaleY = vb.height / rect.height;
-  const x = (evt.clientX - rect.left) * scaleX;
-  const y = (evt.clientY - rect.top) * scaleY;
+  const selIdx = parseInt(dotEl.dataset.idx, 10);
+  const selX = parseFloat(dotEl.dataset.x), selY = parseFloat(dotEl.dataset.y);
+  const targetIdx = order[roundIdx];
+  const target = DISCONTINUITIES[targetIdx];
+  const targetDot = document.querySelector(`.answer-point[data-idx="${targetIdx}"]`);
+  const tgX = parseFloat(targetDot.dataset.x), tgY = parseFloat(targetDot.dataset.y);
 
-  const dx = x - CX, dy = y - CY;
-  let angle = Math.atan2(dy, dx);
-  if(Math.cos(angle) < 0){ angle = Math.PI - angle; } // mirror onto the cutaway (right) half
-  const maxA = 84 * Math.PI/180;
-  if(angle > maxA) angle = maxA;
-  if(angle < -maxA) angle = -maxA;
-
-  const rawDist = Math.sqrt(dx*dx + dy*dy);
-  const rawFraction = rawDist / R;
-  const scoringFraction = Math.min(rawFraction, 1.4);
-
-  const target = DISCONTINUITIES[order[roundIdx]];
-  const errFrac = Math.abs(scoringFraction - target.r);
+  const errFrac = Math.abs(DISCONTINUITIES[selIdx].r - target.r);
   const errPct = errFrac * 100;
   const v = verdictFor(errPct);
   const pts = scoreFor(errPct);
   scores.push(pts);
   results.push({ name: target.name, errPct: +errPct.toFixed(1), pts, cls: v.cls });
 
-  // render markers along the shared radial line
-  const displayFraction = Math.min(rawFraction, 1.12);
-  const guessPt = pt(displayFraction, angle);
-  const targetPt = pt(target.r, angle);
+  // mark every point as settled, then highlight the picked / correct ones
+  document.querySelectorAll('.answer-point').forEach(el=> el.classList.add('done'));
+  dotEl.classList.remove('done');
+  dotEl.classList.add(selIdx === targetIdx ? 'correct' : 'picked');
+  if(selIdx !== targetIdx){
+    targetDot.classList.remove('done');
+    targetDot.classList.add('correct');
+  }
 
-  const radial = document.getElementById('radial-line');
-  radial.setAttribute('x1', guessPt.x.toFixed(1)); radial.setAttribute('y1', guessPt.y.toFixed(1));
-  radial.setAttribute('x2', targetPt.x.toFixed(1)); radial.setAttribute('y2', targetPt.y.toFixed(1));
-  radial.classList.add('show');
+  if(selIdx !== targetIdx){
+    const radial = document.getElementById('radial-line');
+    radial.setAttribute('x1', selX.toFixed(1)); radial.setAttribute('y1', selY.toFixed(1));
+    radial.setAttribute('x2', tgX.toFixed(1)); radial.setAttribute('y2', tgY.toFixed(1));
+    radial.classList.add('show');
 
-  const gMarker = document.getElementById('guess-marker');
-  gMarker.setAttribute('transform', `translate(${guessPt.x.toFixed(1)},${guessPt.y.toFixed(1)})`);
-  gMarker.classList.add('show');
+    const gMarker = document.getElementById('guess-marker');
+    gMarker.setAttribute('transform', `translate(${selX.toFixed(1)},${selY.toFixed(1)})`);
+    gMarker.classList.add('show');
+  }
 
   const tMarker = document.getElementById('target-marker');
-  tMarker.setAttribute('transform', `translate(${targetPt.x.toFixed(1)},${targetPt.y.toFixed(1)})`);
+  tMarker.setAttribute('transform', `translate(${tgX.toFixed(1)},${tgY.toFixed(1)})`);
   tMarker.classList.add('show');
 
   const ring = document.getElementById('target-ring');
