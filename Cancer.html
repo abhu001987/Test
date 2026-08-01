@@ -308,11 +308,11 @@
 
   /* ---------- MAP ---------- */
   #map-viewport{ flex:1 1 auto;position:relative;overflow:hidden; margin:0 8px 8px; min-height:0; border-radius:18px;
-    border:1px solid var(--glass-brd); box-shadow: var(--glass-shadow); isolation:isolate; z-index:0; touch-action:none; cursor:ns-resize; }
+    border:1px solid var(--glass-brd); box-shadow: var(--glass-shadow); isolation:isolate; z-index:0; }
   #map-viewport.screen-covered{visibility:hidden;}
   #map{ position:absolute;inset:0; background:#0e1f30; }
   #map .leaflet-tile-pane{filter:saturate(1.1) contrast(1.02);}
-  #map .leaflet-container{background:#dfe6ea; cursor:ns-resize;}
+  #map .leaflet-container{background:#dfe6ea;}
   #map-loading{ position:absolute;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;
     background:#0e1f30;color:var(--muted-light);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
     pointer-events:none;transition:opacity .3s ease; }
@@ -344,7 +344,7 @@
   .wind-layer{ position:absolute; left:0; right:0; overflow:hidden; pointer-events:none; }
   .w-arrow{ position:absolute; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:13px solid var(--blue);
     opacity:0; will-change:transform,opacity; }
-  .w-chev{ position:absolute; font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:700; color:var(--violet); opacity:0; will-change:transform,opacity; }
+  .w-chev{ position:absolute; font-size:17px; line-height:1; font-weight:700; color:var(--violet); opacity:0; will-change:transform,opacity; }
 
   @keyframes windFlow{ 0%{opacity:0; transform:translate(0,0) rotate(var(--rot));} 12%{opacity:.85;} 85%{opacity:.85;} 100%{opacity:0; transform:translate(var(--dx),var(--dy)) rotate(var(--rot));} }
   @keyframes windRise{ 0%{opacity:0; transform:translateY(0);} 15%{opacity:.9;} 85%{opacity:.9;} 100%{opacity:0; transform:translateY(-26px);} }
@@ -692,7 +692,7 @@
             Chart the Atmosphere
           </div>
           <h1>Circulation <span>Navigator</span></h1>
-          <p class="sub">Drag a line up or down the globe to place the Equator, the two Tropics, and all seven pressure belts and six wind belts of Earth's idealized circulation — in their true latitudes. Finish a run and get a link with the exact same 16 targets, in the exact same order. Send it to a friend and see who reads the atmosphere better, belt by belt.</p>
+          <p class="sub">Drag a line up or down the globe to place the Equator, the two Tropics, and all seven pressure belts and six wind belts of Earth's idealized circulation — in their true latitudes. Finish a run and get a link with the exact same targets, in the exact same order. Send it to a friend and see who reads the atmosphere better, belt by belt.</p>
         </div>
       </div>
 
@@ -704,14 +704,14 @@
             </div>
             <div>
               <h3>Your Mission</h3>
-              <p>Place all 16 lines and belts at their true latitude.</p>
+              <p>Place each target at its true latitude.</p>
             </div>
           </div>
           <div class="info-body">
             <div class="mini-stats">
               <div class="mini-stat">
                 <div class="icon-circle blue"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4"/></svg></div>
-                <div class="mini-stat-text"><span class="t">16 targets</span><span class="d">In exact order</span></div>
+                <div class="mini-stat-text"><span class="t">10 targets</span><span class="d">Shuffled each run</span></div>
               </div>
               <div class="mini-stat">
                 <div class="icon-circle violet"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
@@ -750,7 +750,7 @@
         <div class="steps-row">
           <div class="step">
             <div class="step-num">1</div>
-            <div class="step-text"><div class="t">Drag Your Line</div><div class="d">Up and down to set a latitude</div></div>
+            <div class="step-text"><div class="t">Tap the Map</div><div class="d">Pan or zoom freely, then tap to set a latitude</div></div>
           </div>
           <div class="step">
             <div class="step-num">2</div>
@@ -778,7 +778,7 @@
     <div class="panel wide" style="max-width:900px;">
       <div class="mode-badge"><span class="dot"></span>Incoming Challenge</div>
       <h1 style="text-align:left;">You've Been <span>Challenged</span></h1>
-      <p class="sub" style="text-align:left;">A friend already placed all 16 lines and belts and dared you to beat them. Same targets, same order — their score stays hidden until you finish your own run.</p>
+      <p class="sub" style="text-align:left;">A friend already placed all the targets and dared you to beat them. Same targets, same order — their score stays hidden until you finish your own run.</p>
 
       <div class="info-cards">
         <div class="info-card accent">
@@ -788,7 +788,7 @@
             </div>
             <div>
               <h3>From <span id="invite-rival-name">A navigator</span></h3>
-              <p>Locked in a score across all 16 targets</p>
+              <p>Locked in a score across all targets</p>
             </div>
           </div>
           <div class="info-body">
@@ -805,7 +805,7 @@
             </div>
           </div>
           <div class="info-body">
-            <p style="font-size:12.5px;color:var(--ink-dim);line-height:1.6;margin:2px 0 0;">Drag your line as close to each target latitude as you can — closer placements score higher. At the end you'll get a full head-to-head breakdown.</p>
+            <p style="font-size:12.5px;color:var(--ink-dim);line-height:1.6;margin:2px 0 0;">Tap to place your line as close to each target latitude as you can — closer placements score higher. At the end you'll get a full head-to-head breakdown.</p>
           </div>
         </div>
       </div>
@@ -865,7 +865,7 @@
           <svg viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.8"/><path d="M12 6.3V20M5 13a7 7 0 0014 0M5 13H3M19 13h2M8.2 18l-3-2M15.8 18l3-2"/></svg>
           Challenge a Friend
         </div>
-        <div class="share-sub">Send them this exact run's 16 targets and see if they can out-read your circulation score.</div>
+        <div class="share-sub">Send them this exact run's targets and see if they can out-read your circulation score.</div>
         <div class="link-box">
           <input id="challenge-link" readonly placeholder="Tap Copy to generate your link…">
           <button class="copy-btn" id="copy-link-btn" onclick="copyChallengeLink()">Copy</button>
@@ -905,7 +905,7 @@
     </button>
     <div class="brand">◆ Circulation Navigator</div>
     <div class="strait-card" id="strait-card">
-      <div class="eyebrow" id="round-label">Round 1 of 16</div>
+      <div class="eyebrow" id="round-label">Round 1 of 10</div>
       <div class="title" id="strait-name">—</div>
       <div id="dots"></div>
     </div>
@@ -927,8 +927,8 @@
       <div class="rival-line" id="rival-line" style="display:none;"></div>
     </div>
     <div class="hint-tap" id="tap-hint">
-      <svg viewBox="0 0 24 24"><path d="M12 19V5M12 5l-4 4M12 5l4 4"/><path d="M12 5v14M12 19l-4-4M12 19l4-4" opacity="0"/></svg>
-      Drag up or down to place your line, then lock it in
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+      Tap the map to place your line — drag or pinch to explore, then lock it in
     </div>
     <button class="btn btn-teal" id="lock-btn" style="display:none" onclick="lockGuess()">Lock In Latitude</button>
     <button class="btn btn-primary" id="next-btn" style="display:none" onclick="nextRound()">Next Target →</button>
@@ -1054,13 +1054,13 @@ const ROUNDS = [
     fact:"The coldest place on the planet — sinking air over Antarctica's ice sheet forms a deep, persistent high.",
     wind:'sink', windLabel:'Sinking, diverging air — frigid and calm' }
 ];
-const ROUNDS_PER_GAME = ROUNDS.length; // play the full circulation model every run
+const ROUNDS_PER_GAME = 10; // solo runs sample 10 of the 16 targets, reshuffled each time. Challenge mode always uses the exact order sent by the challenger (see loadChallengeGame), so this constant only affects fresh/solo runs.
 
 /* ---------------- Map setup ---------------- */
 const map = L.map('map', {
   worldCopyJump:false,
-  dragging:false,
-  touchZoom:false,
+  dragging:true,
+  touchZoom:true,
   doubleClickZoom:false,
   scrollWheelZoom:true,
   minZoom:2,
@@ -1115,7 +1115,6 @@ let roundIdx = 0;
 let scores = [];
 let results = [];
 let guessed = false;
-let dragging = false;
 let guessLat = null;
 let mode = 'own';
 let rival = null;
@@ -1170,7 +1169,7 @@ function beginRound(){
 }
 
 function loadRound(){
-  guessed = false; dragging = false; guessLat = null;
+  guessed = false; guessLat = null;
   clearOverlay();
   document.getElementById('feedback').classList.remove('show');
   document.getElementById('wind-desc').style.display = 'none';
@@ -1258,7 +1257,7 @@ function spawnVerticalChevron(container, bandTop, bandBot, rising){
   const rect = document.getElementById('map-viewport').getBoundingClientRect();
   const chev = document.createElement('div');
   chev.className = 'w-chev';
-  chev.textContent = rising ? '︿' : '﹀';
+  chev.textContent = rising ? '▲' : '▼';
   const left = rect.width*0.5 + (Math.random()*2-1)*rect.width*0.35;
   const top = bandTop + (bandBot-bandTop) * (0.3 + Math.random()*0.4);
   chev.style.left = left + 'px';
@@ -1277,51 +1276,35 @@ function spawnConvergeDot(container, bandTop, bandBot){
 
 function drawWind(round, topY, botY){
   if(!round.wind) return;
+  const rawH = Math.abs(botY-topY);
+  const effH = Math.max(30, rawH); // guarantee enough room for icons even on very thin/clamped polar bands
   const layer = document.createElement('div');
   layer.className = 'wind-layer';
   layer.style.top = Math.min(topY,botY) + 'px';
-  layer.style.height = Math.max(20, Math.abs(botY-topY)) + 'px';
+  layer.style.height = effH + 'px';
   overlay.appendChild(layer);
 
   if(round.wind === 'flow'){
-    for(let i=0;i<7;i++) spawnFlowArrow(layer, 0, layer.offsetHeight || Math.abs(botY-topY), round.bearing);
+    for(let i=0;i<7;i++) spawnFlowArrow(layer, 0, effH, round.bearing);
   } else if(round.wind === 'rise'){
-    spawnConvergeDot(layer, 0, Math.abs(botY-topY));
-    for(let i=0;i<3;i++) spawnVerticalChevron(layer, 0, Math.abs(botY-topY), true);
+    spawnConvergeDot(layer, 0, effH);
+    for(let i=0;i<5;i++) spawnVerticalChevron(layer, 0, effH, true);
   } else if(round.wind === 'sink'){
-    for(let i=0;i<3;i++) spawnVerticalChevron(layer, 0, Math.abs(botY-topY), false);
+    for(let i=0;i<5;i++) spawnVerticalChevron(layer, 0, effH, false);
   }
 }
 
-/* ---------------- Pointer / drag handling ---------------- */
+/* ---------------- Tap-to-place handling (map stays fully pannable/zoomable) ---------------- */
 const viewport = document.getElementById('map-viewport');
 
-function pointerToLat(evt){
-  const rect = viewport.getBoundingClientRect();
-  const y = evt.clientY - rect.top;
-  return yToLat(y);
-}
-
-function onPointerDown(evt){
+function onMapClick(e){
   if(guessed) return;
-  dragging = true;
-  try{ viewport.setPointerCapture(evt.pointerId); }catch(e){}
-  guessLat = pointerToLat(evt);
+  guessLat = clampLat(e.latlng.lat);
   drawGuessLine(guessLat);
   document.getElementById('tap-hint').style.display = 'none';
   document.getElementById('lock-btn').style.display = 'inline-block';
 }
-function onPointerMove(evt){
-  if(!dragging || guessed) return;
-  guessLat = pointerToLat(evt);
-  drawGuessLine(guessLat);
-}
-function onPointerUp(evt){ dragging = false; }
-
-viewport.addEventListener('pointerdown', onPointerDown);
-viewport.addEventListener('pointermove', onPointerMove);
-viewport.addEventListener('pointerup', onPointerUp);
-viewport.addEventListener('pointercancel', onPointerUp);
+map.on('click', onMapClick);
 
 /* ---------------- Scoring ---------------- */
 function degDiff(lat, round){
@@ -1399,7 +1382,6 @@ function triggerRoundEffect(cls){
 function lockGuess(){
   if(guessed || guessLat === null) return;
   guessed = true;
-  dragging = false;
 
   const round = ROUNDS[order[roundIdx]];
   const gLat = guessLat;
@@ -1453,7 +1435,7 @@ function nextRound(){
   loadRound();
 }
 
-/* Redraw whatever's on screen if the viewport resizes mid-round (guess line or reveal) */
+/* Redraw whatever's on screen if the viewport resizes, or the map is panned/zoomed, mid-round */
 function redrawActive(){
   if(document.getElementById('map-viewport').classList.contains('screen-covered')) return;
   if(!order.length) return;
@@ -1730,7 +1712,7 @@ async function ensureChallengeLinkReady(){
     const link = buildLinkFromGameCode(gameCode);
     linkInput.value = link;
 
-    const msg = `🌬️ I just charted the Circulation Navigator and scored ${currentAvgScore}%. Think you can place the wind belts closer? Take the same 16 targets: ${link}`;
+    const msg = `🌬️ I just charted the Circulation Navigator and scored ${currentAvgScore}%. Think you can place the wind belts closer? Take the same targets: ${link}`;
     document.getElementById('wa-share').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
     document.getElementById('tg-share').href = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(`🌬️ Think you can beat my Circulation Navigator score of ${currentAvgScore}%?`);
     ['wa-share','tg-share'].forEach(id=>{ document.getElementById(id).classList.remove('disabled'); });
