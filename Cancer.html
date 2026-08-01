@@ -328,6 +328,7 @@
   .h-line .rule{ position:absolute; left:0; right:0; top:0; height:2px; }
   .h-line .chip{ position:absolute; top:0; transform:translateY(-50%); font-family:'IBM Plex Mono',monospace; font-weight:700;
     font-size:10.5px; padding:4px 9px; border-radius:20px; white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,0.18); }
+  #guess-line .hit-area{ position:absolute; left:0; right:0; top:-16px; height:32px; pointer-events:auto; touch-action:none; cursor:ns-resize; z-index:2; }
 
   #guess-line .rule{ background:var(--coral); box-shadow:0 0 8px rgba(242,84,95,0.6); border-top:1px dashed rgba(242,84,95,0.9); }
   #guess-line .chip{ right:10px; background:var(--coral); color:#fff; }
@@ -928,7 +929,7 @@
     </div>
     <div class="hint-tap" id="tap-hint">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
-      Tap the map to place your line — drag or pinch to explore, then lock it in
+      Tap to drop your line, then drag the red line itself to fine-tune — drag elsewhere to pan the map
     </div>
     <button class="btn btn-teal" id="lock-btn" style="display:none" onclick="lockGuess()">Lock In Latitude</button>
     <button class="btn btn-primary" id="next-btn" style="display:none" onclick="nextRound()">Next Target →</button>
@@ -1205,11 +1206,41 @@ function drawGuessLine(lat){
   if(!el){
     el = document.createElement('div');
     el.id = 'guess-line'; el.className = 'h-line';
-    el.innerHTML = '<div class="rule"></div><div class="chip" id="guess-chip"></div>';
+    el.innerHTML = '<div class="hit-area" id="guess-hit"></div><div class="rule"></div><div class="chip" id="guess-chip"></div>';
     overlay.appendChild(el);
+    attachGuessLineDrag(document.getElementById('guess-hit'));
   }
   el.style.top = latToY(lat) + 'px';
   document.getElementById('guess-chip').textContent = 'You: ' + fmtLat(lat);
+}
+
+/* Grabbing the red line itself moves it freely up/down, independent of the
+   map's own pan/zoom (which is handled natively by Leaflet everywhere else). */
+let guessDragging = false;
+function attachGuessLineDrag(hit){
+  hit.addEventListener('pointerdown', function(e){
+    if(guessed) return;
+    guessDragging = true;
+    try{ hit.setPointerCapture(e.pointerId); }catch(err){}
+    e.stopPropagation();
+    e.preventDefault();
+  });
+  hit.addEventListener('pointermove', function(e){
+    if(!guessDragging || guessed) return;
+    e.stopPropagation();
+    const rect = viewport.getBoundingClientRect();
+    const y = e.clientY - rect.top;
+    guessLat = yToLat(y);
+    drawGuessLine(guessLat);
+  });
+  function endGuessDrag(e){
+    if(guessDragging){
+      guessDragging = false;
+      try{ hit.releasePointerCapture(e.pointerId); }catch(err){}
+    }
+  }
+  hit.addEventListener('pointerup', endGuessDrag);
+  hit.addEventListener('pointercancel', endGuessDrag);
 }
 
 function drawTarget(round){
