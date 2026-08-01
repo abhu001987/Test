@@ -371,6 +371,22 @@
   @media (max-height:640px){ .strait-card{padding:5px 10px;} #dots{margin-top:3px;} .hint-tap{display:none;} .menu-footer { margin-top: 16px; padding-top: 12px; } }
   @media (max-width:420px){ .brand{display:none;} #challenge-flag span.flag-text{display:none;} }
 
+  /* Mobile: shrink chrome and let the Earth stage claim the freed space + a
+     tighter viewBox (set in JS) so it renders large instead of tiny. */
+  @media (max-width:640px){
+    #earth-wrap{ padding:6px; }
+    #earth-svg{ max-width:none; max-height:none; }
+    #map-viewport{ margin:0 4px 4px; border-radius:14px; }
+    #hud-top{ padding:6px 8px; gap:6px; }
+    .strait-card{ padding:6px 10px; }
+    .score-pill{ padding:6px 10px; font-size:10px; }
+    #hud-bottom{ padding:6px 8px 10px; gap:6px; }
+    /* legend text needs real estate that mobile doesn't have — the row of
+       answer-point dots is what matters for play, so hide the legend copy
+       and let the globe fill the cropped viewBox. */
+    .leader-label, .leader-sub{ display:none; }
+  }
+
   @keyframes badShake{ 10%,90%{transform:translateX(-1px);} 20%,80%{transform:translateX(2px);} 30%,50%,70%{transform:translateX(-5px);} 40%,60%{transform:translateX(5px);} }
   .fx-shake{animation:badShake .5s ease;}
   @keyframes goodPulse{ 0%{box-shadow:0 0 0 0 rgba(74,158,122,.5);} 70%{box-shadow:0 0 0 16px rgba(74,158,122,0);} 100%{box-shadow:0 0 0 0 rgba(74,158,122,0);} }
@@ -740,10 +756,12 @@
         <line id="seam-line" x1="270" y1="60" x2="270" y2="560"></line>
         <circle id="globe-outline" cx="270" cy="310" r="250"></circle>
 
-        <!-- legend leader lines: Crust / Mantle / Outer Core / Inner Core -->
+        <!-- legend: text-only labels, no leader lines/dots -->
         <g id="legend-layer"></g>
 
-        <!-- the 5 clickable discontinuity points — always visible, user picks one per round -->
+        <!-- the 5 clickable discontinuity buttons, arranged in a single
+             top-to-bottom row so they're always precisely tappable and
+             never overlap each other -->
         <g id="answer-points"></g>
 
         <!-- gameplay markers -->
@@ -825,8 +843,9 @@ function setHeaderVisible(visible){
 // r = radius fraction (0=centre, 1=surface) used for the *diagram* — exaggerated
 // vs. real Earth proportions (like every textbook cutaway) so the crust reads
 // clearly. depth = the real, non-exaggerated figure shown in the fact panel.
-// pointAngleDeg places that discontinuity's clickable dot on its boundary ring —
-// angles are staggered so the 5 dots never sit close enough to overlap.
+// pointAngleDeg places that discontinuity's TRUE marker (the ring/marker shown
+// after you answer) on its actual boundary — this is separate from the row of
+// clickable buttons below, which exists purely so answers are easy to tap.
 const DISCONTINUITIES = [
   { id:'conrad', name:'Conrad Discontinuity', between:'Upper Crust ↔ Lower Crust', r:0.95, pointAngleDeg:-85,
     depth:'≈15–20 km down', adj:['upperCrust','lowerCrust'],
@@ -854,23 +873,19 @@ const LAYERS = {
   innerCore:   { rOuter:0.18, rInner:0.00 }
 };
 
-// Each legend item's dot sits on that category's own outer boundary (its own
-// radius), but the LABEL is pinned to a fixed, evenly-spaced Y position —
-// decoupled from the dot's radius — via a diagonal leader line. That's what
-// keeps CRUST / MANTLE / OUTER CORE / INNER CORE from ever colliding, no
-// matter how small the inner rings are. Each also gets its own colour.
+// Legend labels only — no leader lines or dots. labelY still keeps the four
+// rows evenly spaced down the right-hand column.
 const LEGEND = [
-  { label:'CRUST',      sub:'Solid rock shell we stand on',  r:1.00, angleDeg:-72, labelY:150, color:'#D9AE5C' },
-  { label:'MANTLE',     sub:'Slow-flowing hot rock',         r:0.88, angleDeg:-35, labelY:238, color:'#E2612C' },
-  { label:'OUTER CORE', sub:'Liquid iron & nickel',          r:0.40, angleDeg:15,  labelY:326, color:'#F2A73B' },
-  { label:'INNER CORE', sub:'Solid iron, immense pressure',  r:0.18, angleDeg:55,  labelY:414, color:'#FFD966' }
+  { label:'CRUST',      sub:'Solid rock shell we stand on',  labelY:150, color:'#D9AE5C' },
+  { label:'MANTLE',     sub:'Slow-flowing hot rock',         labelY:238, color:'#E2612C' },
+  { label:'OUTER CORE', sub:'Liquid iron & nickel',          labelY:326, color:'#F2A73B' },
+  { label:'INNER CORE', sub:'Solid iron, immense pressure',  labelY:414, color:'#FFD966' }
 ];
 
 const ROUNDS_PER_GAME = DISCONTINUITIES.length; // 5
 
 /* ---------------- Geometry ---------------- */
 const CX = 270, CY = 310, R = 250;
-const LEGEND_LINE_X = 545;
 const LEGEND_TEXT_X = 553;
 
 function pt(rFrac, angleRad){
@@ -956,34 +971,59 @@ function buildPhotoHalf(){
 }
 
 function buildLegend(){
+  // Text-only legend now — no leader lines, no leader dots, just the label
+  // and sub-label sitting in a fixed column.
   const g = document.getElementById('legend-layer');
   let html = '';
   LEGEND.forEach(item=>{
-    const ang = item.angleDeg * Math.PI/180;
-    const p = pt(item.r, ang);
     const ly = item.labelY;
-    html += `<circle class="leader-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.6" style="fill:${item.color}"></circle>`;
-    html += `<line class="leader-line" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${LEGEND_LINE_X}" y2="${ly}" style="stroke:${item.color}"></line>`;
-    html += `<circle cx="${LEGEND_LINE_X}" cy="${ly}" r="2" style="fill:${item.color}"></circle>`;
     html += `<text class="leader-label" x="${LEGEND_TEXT_X}" y="${ly-3}" style="fill:${item.color}">${item.label}</text>`;
     html += `<text class="leader-sub" x="${LEGEND_TEXT_X}" y="${ly+11}">${item.sub}</text>`;
   });
   g.innerHTML = html;
 }
 
+// The 5 clickable answer buttons are laid out as a single evenly-spaced
+// vertical row (top → bottom) along the seam line, in the same shallow →
+// deep order as DISCONTINUITIES. This keeps them uncluttered, unambiguous,
+// and impossible to mis-tap between — each button only has its own small
+// hit circle, and nothing else on the board is clickable.
+const ROW_X = CX;
+const ROW_TOP = CY - 200;    // 110
+const ROW_BOTTOM = CY + 200; // 510
+function rowY(i){
+  if(DISCONTINUITIES.length === 1) return CY;
+  return ROW_TOP + (i * (ROW_BOTTOM - ROW_TOP) / (DISCONTINUITIES.length - 1));
+}
+
 function buildAnswerPoints(){
   const g = document.getElementById('answer-points');
   let html = '';
   DISCONTINUITIES.forEach((d, i)=>{
-    const ang = d.pointAngleDeg * Math.PI/180;
-    const p = pt(d.r, ang);
+    const y = rowY(i);
     const delay = (i * 0.28).toFixed(2);
-    html += `<g class="answer-point" data-idx="${i}" data-x="${p.x.toFixed(1)}" data-y="${p.y.toFixed(1)}">
-      <circle class="answer-point-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="17"></circle>
-      <circle class="answer-point-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" style="animation-delay:${delay}s"></circle>
+    html += `<g class="answer-point" data-idx="${i}">
+      <circle class="answer-point-hit" cx="${ROW_X}" cy="${y.toFixed(1)}" r="17"></circle>
+      <circle class="answer-point-dot" cx="${ROW_X}" cy="${y.toFixed(1)}" r="5" style="animation-delay:${delay}s"></circle>
     </g>`;
   });
   g.innerHTML = html;
+}
+
+/* ---------------- Responsive viewBox (mobile fix) ----------------
+   The legend column pushes the drawable viewBox out to x=760, which on a
+   narrow phone screen forces the whole globe to shrink to fit that extra
+   width, leaving the actual Earth tiny. On mobile we crop the viewBox to
+   just the globe itself so it fills the available space; the legend text
+   is hidden at that breakpoint via CSS anyway. */
+function updateViewBoxForViewport(){
+  const svg = document.getElementById('earth-svg');
+  if(!svg) return;
+  if(window.innerWidth <= 640){
+    svg.setAttribute('viewBox', '0 0 545 640');
+  } else {
+    svg.setAttribute('viewBox', '0 0 760 640');
+  }
 }
 
 /* ---------------- Shooting stars ---------------- */
@@ -1031,6 +1071,7 @@ buildLegend();
 buildAnswerPoints();
 buildStars();
 startShootingStars();
+updateViewBoxForViewport();
 
 /* ---------------- Game state ---------------- */
 let order = [];
@@ -1186,28 +1227,34 @@ answerPointsLayer.addEventListener('click', onPointClick);
 function onPointClick(evt){
   if(guessed) return;
   const dotEl = evt.target.closest('.answer-point');
-  if(!dotEl) return; // clicked the gap between points — ignore, points are the only valid targets
+  if(!dotEl) return; // clicked outside a button's own hit circle — ignore entirely
   guessed = true;
 
   const selIdx = parseInt(dotEl.dataset.idx, 10);
-  const selX = parseFloat(dotEl.dataset.x), selY = parseFloat(dotEl.dataset.y);
   const targetIdx = order[roundIdx];
   const target = DISCONTINUITIES[targetIdx];
-  const targetDot = document.querySelector(`.answer-point[data-idx="${targetIdx}"]`);
-  const tgX = parseFloat(targetDot.dataset.x), tgY = parseFloat(targetDot.dataset.y);
+  const selDisc = DISCONTINUITIES[selIdx];
 
-  const errFrac = Math.abs(DISCONTINUITIES[selIdx].r - target.r);
+  // True physical positions on the cutaway (independent of the row of
+  // buttons) — used only to draw the reveal markers/ring in the right spot.
+  const selPos = pt(selDisc.r, selDisc.pointAngleDeg * Math.PI/180);
+  const tgPos = pt(target.r, target.pointAngleDeg * Math.PI/180);
+  const selX = selPos.x, selY = selPos.y;
+  const tgX = tgPos.x, tgY = tgPos.y;
+
+  const errFrac = Math.abs(selDisc.r - target.r);
   const errPct = errFrac * 100;
   const v = verdictFor(errPct);
   const pts = scoreFor(errPct);
   scores.push(pts);
   results.push({ name: target.name, errPct: +errPct.toFixed(1), pts, cls: v.cls });
 
-  // mark every point as settled, then highlight the picked / correct ones
+  // mark every button as settled, then highlight the picked / correct ones
   document.querySelectorAll('.answer-point').forEach(el=> el.classList.add('done'));
   dotEl.classList.remove('done');
   dotEl.classList.add(selIdx === targetIdx ? 'correct' : 'picked');
   if(selIdx !== targetIdx){
+    const targetDot = document.querySelector(`.answer-point[data-idx="${targetIdx}"]`);
     targetDot.classList.remove('done');
     targetDot.classList.add('correct');
   }
@@ -1697,7 +1744,7 @@ function handleViewportSettle(){
   resizeSettleTimer = setTimeout(function(){
     const widthChanged = window.innerWidth !== lastKnownWidth;
     lastKnownWidth = window.innerWidth;
-    if (widthChanged) syncNavHeight();
+    if (widthChanged) { syncNavHeight(); updateViewBoxForViewport(); }
   }, 150);
 }
 window.addEventListener('resize', handleViewportSettle);
