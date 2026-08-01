@@ -854,37 +854,58 @@
         <path class="layer-band" data-layer="stratosphere" fill="url(#gradStrato)" d="M110.96,350 L389.04,350 L363.08,440 L136.92,440 Z"></path>
         <path class="layer-band" data-layer="troposphere" fill="url(#gradTropo)" d="M136.92,440 L363.08,440 L340,520 L160,520 Z"></path>
 
+        <!-- earth: glow rim + sphere + continents -->
+        <circle cx="250" cy="806" r="309" fill="none" stroke="#8FD4FF" stroke-width="12" opacity="0.4" filter="url(#softBlur)" clip-path="url(#earthClip)"></circle>
         <circle cx="250" cy="806" r="300" fill="url(#earthGrad)" clip-path="url(#earthClip)"></circle>
+        <g clip-path="url(#earthClip)" opacity="0.75">
+          <ellipse cx="205" cy="552" rx="30" ry="12" fill="#4C9A63" transform="rotate(-16 205 552)"/>
+          <ellipse cx="300" cy="565" rx="42" ry="15" fill="#4C9A63" transform="rotate(10 300 565)"/>
+          <ellipse cx="245" cy="590" rx="22" ry="9" fill="#3F8A57"/>
+          <ellipse cx="345" cy="548" rx="18" ry="8" fill="#3F8A57"/>
+          <ellipse cx="165" cy="575" rx="16" ry="7" fill="#3F8A57"/>
+          <ellipse cx="230" cy="535" rx="60" ry="10" fill="#FFFFFF" opacity="0.18"/>
+        </g>
+        <path d="M160,520 A300,300 0 0 1 340,520" fill="none" stroke="#CFEEFF" stroke-width="2" opacity="0.75" clip-path="url(#earthClip)"></path>
 
-        <!-- ambient icons -->
-        <g class="band-icon sat-orbit" transform="translate(388,48)" opacity="0.9">
-          <rect x="-3" y="-3" width="6" height="6" rx="1" fill="#EAF2FF"/>
-          <rect x="-14" y="-1.5" width="9" height="3" fill="#8FB8FF"/>
-          <rect x="5" y="-1.5" width="9" height="3" fill="#8FB8FF"/>
-          <line x1="0" y1="-3" x2="0" y2="-9" stroke="#EAF2FF" stroke-width="1"/>
+        <!-- ambient icons: outer group = fixed position, inner group = the only thing CSS animates -->
+        <g transform="translate(388,48)" opacity="0.9">
+          <g class="band-icon sat-orbit">
+            <rect x="-3" y="-3" width="6" height="6" rx="1" fill="#EAF2FF"/>
+            <rect x="-14" y="-1.5" width="9" height="3" fill="#8FB8FF"/>
+            <rect x="5" y="-1.5" width="9" height="3" fill="#8FB8FF"/>
+            <line x1="0" y1="-3" x2="0" y2="-9" stroke="#EAF2FF" stroke-width="1"/>
+          </g>
         </g>
-        <g class="band-icon shuttle-drift" transform="translate(345,180) rotate(-30)" opacity="0.9">
-          <path d="M-14,0 Q-14,-6 0,-6 L10,-3 L10,3 L0,6 Q-14,6 -14,0 Z" fill="#DCE9FF"/>
-          <path d="M8,-3 L18,-1 L18,1 L8,3 Z" fill="#F2545F"/>
+        <g transform="translate(345,180) rotate(-30)" opacity="0.9">
+          <g class="band-icon shuttle-drift">
+            <path d="M-14,0 Q-14,-6 0,-6 L10,-3 L10,3 L0,6 Q-14,6 -14,0 Z" fill="#DCE9FF"/>
+            <path d="M8,-3 L18,-1 L18,1 L8,3 Z" fill="#F2545F"/>
+          </g>
         </g>
-        <g class="band-icon" transform="translate(310,285)" opacity="0.95">
+        <g transform="translate(310,285)" opacity="0.95">
           <line x1="-26" y1="-16" x2="0" y2="8" stroke="url(#meteorTrail)" stroke-width="3" stroke-linecap="round"/>
           <line x1="-14" y1="-24" x2="6" y2="-4" stroke="url(#meteorTrail)" stroke-width="2" stroke-linecap="round"/>
         </g>
-        <g class="band-icon balloon-float" transform="translate(295,388)" opacity="0.95">
-          <ellipse cx="0" cy="-8" rx="12" ry="15" fill="#F7EADB"/>
-          <line x1="-6" y1="4" x2="-4" y2="14" stroke="#F7EADB" stroke-width="1.2"/>
-          <line x1="6" y1="4" x2="4" y2="14" stroke="#F7EADB" stroke-width="1.2"/>
-          <rect x="-5" y="14" width="10" height="7" rx="1.5" fill="#DB9A3E"/>
+        <g transform="translate(295,388)" opacity="0.95">
+          <g class="band-icon balloon-float">
+            <ellipse cx="0" cy="-8" rx="12" ry="15" fill="#F7EADB"/>
+            <line x1="-6" y1="4" x2="-4" y2="14" stroke="#F7EADB" stroke-width="1.2"/>
+            <line x1="6" y1="4" x2="4" y2="14" stroke="#F7EADB" stroke-width="1.2"/>
+            <rect x="-5" y="14" width="10" height="7" rx="1.5" fill="#DB9A3E"/>
+          </g>
         </g>
-        <g class="band-icon cloud-drift" transform="translate(255,468)" opacity="0.95">
-          <ellipse cx="0" cy="0" rx="20" ry="10" fill="#FFFFFF"/>
-          <ellipse cx="-14" cy="4" rx="13" ry="8" fill="#FFFFFF"/>
-          <ellipse cx="15" cy="5" rx="14" ry="8" fill="#FFFFFF"/>
+        <g transform="translate(255,468)" opacity="0.95">
+          <g class="band-icon cloud-drift">
+            <ellipse cx="0" cy="0" rx="20" ry="10" fill="#FFFFFF"/>
+            <ellipse cx="-14" cy="4" rx="13" ry="8" fill="#FFFFFF"/>
+            <ellipse cx="15" cy="5" rx="14" ry="8" fill="#FFFFFF"/>
+          </g>
         </g>
-        <g class="band-icon cloud-drift" transform="translate(178,486)" opacity="0.8" style="animation-delay:1.2s">
-          <ellipse cx="0" cy="0" rx="13" ry="7" fill="#FFFFFF"/>
-          <ellipse cx="-9" cy="3" rx="9" ry="5.5" fill="#FFFFFF"/>
+        <g transform="translate(178,486)" opacity="0.8">
+          <g class="band-icon cloud-drift" style="animation-delay:1.2s">
+            <ellipse cx="0" cy="0" rx="13" ry="7" fill="#FFFFFF"/>
+            <ellipse cx="-9" cy="3" rx="9" ry="5.5" fill="#FFFFFF"/>
+          </g>
         </g>
 
         <!-- markers -->
