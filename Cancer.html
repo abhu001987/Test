@@ -1422,6 +1422,26 @@ function lockGuess(){
   scores.push(pts);
   results.push({name:round.name, deg:Math.round(deg*10)/10, pts, cls:v.cls});
 
+  document.getElementById('lock-btn').style.display = 'none';
+
+  // Fly the map to where this target actually sits — the player may have
+  // panned/zoomed elsewhere while placing their guess, so make sure they
+  // actually get shown the real location before the result appears.
+  const targetCenterLat = round.kind === 'line' ? round.lat : (round.min + round.max) / 2;
+  const revealZoom = Math.min(map.getZoom(), 3);
+
+  let revealed = false;
+  function fireReveal(){
+    if(revealed) return;
+    revealed = true;
+    revealResult(round, gLat, deg, v, pts);
+  }
+  map.once('moveend', fireReveal);
+  map.flyTo([targetCenterLat, map.getCenter().lng], revealZoom, { duration: 1.1, easeLinearity: 0.25 });
+  setTimeout(fireReveal, 1400); // fallback in case flyTo doesn't fire moveend (e.g. already centered)
+}
+
+function revealResult(round, gLat, deg, v, pts){
   clearOverlay();
   const targetRect = drawTarget(round);
   drawGuessLine(gLat);
@@ -1449,7 +1469,6 @@ function lockGuess(){
   }
 
   document.getElementById('feedback').classList.add('show');
-  document.getElementById('lock-btn').style.display = 'none';
   document.getElementById('next-btn').style.display = 'inline-block';
   document.getElementById('next-btn').textContent = roundIdx === order.length-1 ? 'See Results →' : 'Next Target →';
 
