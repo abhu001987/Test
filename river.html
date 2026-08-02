@@ -1191,8 +1191,8 @@ function lockGuess(){
   });
 
   const v = isCorrect
-    ? { label:'Correct — that\\'s the one!', cls:'good', icon:'check' }
-    : { label:'Not quite — here\\'s the real route.', cls:'bad', icon:'x' };
+    ? { label:'Correct — that is the one!', cls:'good', icon:'check' }
+    : { label:'Not quite — here is the real route.', cls:'bad', icon:'x' };
 
   document.getElementById('verdict-text').innerHTML = `${VERDICT_ICONS[v.icon]} ${v.label}  (+${pts} pts)`;
   document.getElementById('verdict-text').className = 'verdict ' + v.cls;
