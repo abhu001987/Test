@@ -1172,6 +1172,8 @@ function beginRound(){
 function loadRound(){
   guessed = false; guessLat = null;
   clearOverlay();
+  map.stop();
+  map.flyTo([5, 20], 2, { duration: 0.6, easeLinearity: 0.25 });
   document.getElementById('feedback').classList.remove('show');
   document.getElementById('wind-desc').style.display = 'none';
   document.getElementById('rival-line').style.display = 'none';
