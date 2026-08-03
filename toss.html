@@ -2608,11 +2608,18 @@ function renderCollections(){
   });
 }
 function renderQuickBar(){
-  document.getElementById('quickBar').innerHTML = QUICKBAR.map(q=>`
-    <div class="quick-item icon-hover">
+  const bar = document.getElementById('quickBar');
+  bar.innerHTML = QUICKBAR.map(q=>`
+    <div class="quick-item icon-hover" data-url="${q.url || '#'}">
       <span class="icon-badge">${ic(q.icon)}</span>
       <div><div class="qt">${q.t}</div><div class="qs">${q.s}</div></div>
     </div>`).join('');
+  bar.querySelectorAll('.quick-item').forEach((el, i)=>{
+    el.addEventListener('click', ()=>{
+      const url = QUICKBAR[i].url;
+      if(url && url !== '#'){ window.location.href = url; }
+    });
+  });
 }
 function setRegion(region, highlightName){
   currentRegion = region;
