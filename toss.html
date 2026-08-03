@@ -2633,13 +2633,21 @@ function setRegion(region, highlightName){
   document.getElementById('tmSub').textContent = region === 'india'
     ? '30+ India-specific categories — rivers, mountains, parks and more mapped to the subcontinent.'
     : '30+ categories mapped across rivers, ranges, climate systems, trade and more — tap one to start practicing.';
-  renderTopicsGrid(region);
-  if(highlightName){
-    setTimeout(()=>{
-      const card = [...document.querySelectorAll('.topic-card')].find(c=>c.dataset.topic===highlightName);
-      if(card){ card.scrollIntoView({block:'center',behavior:'smooth'}); card.classList.add('flash'); setTimeout(()=>card.classList.remove('flash'),1000); }
-    },260);
-  }
+  function renderTopicsGrid(region){
+  const list = REGION_TOPICS[region] || WORLD_TOPICS;
+  document.getElementById('topicsGrid').innerHTML = list.map((t,i)=>`
+    <div class="topic-card" data-topic="${t.name}" data-url="${t.url || '#'}" style="animation-delay:${i*22}ms">
+      <div class="icon-badge">${ic(t.icon)}</div>
+      <div class="cname">${t.name}</div>
+      <div class="ccount">${t.count} items</div>
+    </div>`).join('');
+
+  document.querySelectorAll('.topic-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const url = card.dataset.url;
+      if(url && url !== '#'){ window.location.href = url; }
+    });
+  });
 }
 function openTopicsModal(highlightName, region){
   document.getElementById('topicsOverlay').classList.add('open');
