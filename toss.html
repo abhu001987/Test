@@ -2589,7 +2589,23 @@ const QUICKBAR = [
   { icon:"pilgrimage", t:"Major Pilgrimage Sites", s:"Sacred places", url:"https://abhu001987.github.io/Test/straits" }
 ];
 
+function renderTopicsGrid(region){
+  const grid = document.getElementById('topicsGrid');
+  const topics = REGION_TOPICS[region] || WORLD_TOPICS;
+  grid.innerHTML = topics.map((t,i)=>`
+    <div class="topic-card" data-topic="${t.name}" data-url="${t.url || '#'}" style="animation-delay:${i*25}ms">
+      <div class="icon-badge">${ic(t.icon)}</div>
+      <div class="cname">${t.name}</div>
+      <div class="ccount">${t.count} items</div>
+    </div>`).join('');
 
+  grid.querySelectorAll('.topic-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const url = card.dataset.url;
+      if(url && url !== '#'){ window.location.href = url; }
+    });
+  });
+}
 function renderCollections(){
   const grid = document.getElementById('collectionsGrid');
   grid.innerHTML = WORLD_TOPICS.slice(0,8).map((t,i)=>`
