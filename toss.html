@@ -4,6 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>MapiDesk — Chart the World. Crack the exam.</title>
+
+<script>
+(function(){
+  try {
+    var stored = localStorage.getItem('terra-site-theme');
+    document.documentElement.setAttribute('data-theme', stored === 'dark' ? 'dark' : 'light');
+  } catch(e) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
