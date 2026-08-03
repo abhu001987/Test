@@ -2607,21 +2607,12 @@ function renderCollections(){
     });
   });
 }
-function renderTopicsGrid(region){
-  const list = REGION_TOPICS[region] || WORLD_TOPICS;
-  document.getElementById('topicsGrid').innerHTML = list.map((t,i)=>`
-    <div class="topic-card" data-topic="${t.name}" data-url="${t.url || '#'}" style="animation-delay:${i*22}ms">
-      <div class="icon-badge">${ic(t.icon)}</div>
-      <div class="cname">${t.name}</div>
-      <div class="ccount">${t.count} items</div>
+function renderQuickBar(){
+  document.getElementById('quickBar').innerHTML = QUICKBAR.map(q=>`
+    <div class="quick-item icon-hover">
+      <span class="icon-badge">${ic(q.icon)}</span>
+      <div><div class="qt">${q.t}</div><div class="qs">${q.s}</div></div>
     </div>`).join('');
-
-  document.querySelectorAll('.topic-card').forEach(card=>{
-    card.addEventListener('click', ()=>{
-      const url = card.dataset.url;
-      if(url && url !== '#'){ window.location.href = url; }
-    });
-  });
 }
 function setRegion(region, highlightName){
   currentRegion = region;
