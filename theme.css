@@ -4,61 +4,50 @@
    ============================================================ */
 
 :root {
-  /* Glass */
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.45);
-  --glass-shadow: 0 12px 40px rgba(30, 40, 80, 0.10);
-
-  /* Ink */
-  --deep-blue: #1A2440;
-  --deep-blue-soft: #2C3A5C;
-  --ink: #1E2740;
-  --ink-soft: #454F6B;
-  --muted: #7B84A0;
-  --muted-light: #C7CCE0;
-
-  /* Accent — keep gold, but warmer/cleaner so it pops against the blue */
-  --gold: #E0A045;
-  --gold-bright: #F0B968;
-  --gold-glow: rgba(224, 160, 69, 0.16);
-
-  --white-glass: rgba(255, 255, 255, 0.65);
-  --card-bg: rgba(255, 255, 255, 0.7);
-  --border-light: rgba(26, 36, 64, 0.08);
-
-  --navy: #0D1424;
-  --navy-soft: #182238;
-  --navy-softer: #22304A;
-  --parchment: #EFE7D4;
-  --brass: #DB9A3E;
-  --brass-bright: #F7C177;
-  --moss: #6B8A6D;
-  --rust: #C4623C;
-  --ink-text: #F1EADA;
-  --muted-dark: #6B7981;
-  --line: rgba(237,230,211,0.12);
-
-  /* Background — crisp periwinkle → white, like your reference image */
-  --body-bg: linear-gradient(160deg, #DCE4FF 0%, #EEF1FF 45%, #FFFFFF 100%);
-  --body-bg-2: #E8EBFA;
-
-  --pc-opt-bg: rgba(255,255,255,0.72);
-  --pc-result-bg: rgba(255,255,255,0.85);
-  --danger: #F2545F;
-  --danger-dim: rgba(242, 84, 95, 0.12);
-  --radius: 22px;
-  --radius-sm: 14px;
-  --ease: cubic-bezier(.4, 0, .2, 1);
-
-  --mint: #34D399;
-  --blue: #5B7FFF;
-  --violet: #8B7CF6;
-  --amber: #F0B03C;
-  --blue-soft: rgba(91, 127, 255, 0.12);
-  --violet-soft: rgba(139, 124, 246, 0.12);
-  --panel-strong: rgba(255, 255, 255, 0.92);
-  --input-bg: rgba(0, 0, 0, 0.04);
-}
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.35);
+    --glass-shadow: 0 12px 40px rgba(0, 20, 40, 0.10);
+    --deep-blue: #0B2A3C;
+    --deep-blue-soft: #1A3B4F;
+    --ink: #1A2E3B;
+    --ink-soft: #3A4F5E;
+    --muted: #748A98;
+    --muted-light: #B4C8D4;
+    --gold: #D4A853;
+    --gold-bright: #EAC072;
+    --gold-glow: rgba(212, 168, 83, 0.15);
+    --white-glass: rgba(255, 255, 255, 0.55);
+    --card-bg: rgba(255, 255, 255, 0.55);
+    --border-light: rgba(11, 42, 60, 0.08);
+    --navy: #0D1720;
+    --navy-soft: #182B3A;
+    --navy-softer: #203A4C;
+    --parchment: #EFE7D4;
+    --brass: #DB9A3E;
+    --brass-bright: #F7C177;
+    --moss: #6B8A6D;
+    --rust: #C4623C;
+    --ink-text: #F1EADA;
+    --muted-dark: #6B7981;
+    --line: rgba(237,230,211,0.12);
+    --body-bg: linear-gradient(135deg, #D6E4FF 0%, #E8D5FF 40%, #D5F5E3 100%);
+    --body-bg-2: #DCE4F0;
+    --pc-opt-bg: rgba(255,255,255,0.68);
+    --pc-result-bg: rgba(255,255,255,0.8);
+    --danger: #F2545F;
+    --danger-dim: rgba(242, 84, 95, 0.12);
+    --radius: 22px;
+    --radius-sm: 14px;
+    --ease: cubic-bezier(.4, 0, .2, 1);
+    --mint: #3ED598;
+    --blue: #5B7FFF;
+    --violet: #8B7CF6;
+    --amber: #F0B03C;
+    --blue-soft: rgba(91, 127, 255, 0.12);
+    --violet-soft: rgba(139, 124, 246, 0.12);
+    --panel-strong: rgba(255, 255, 255, 0.9);
+    --input-bg: rgba(0, 0, 0, 0.04);
+  }
    
 [data-theme="dark"] {
   --glass-bg: rgba(16, 28, 38, 0.55);
